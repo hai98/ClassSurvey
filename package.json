@@ -2,7 +2,7 @@
   "name": "class_survey",
   "version": "1.0.0",
   "description": "Class Survey project assignment",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.4",
+    "http-errors": "^1.7.1",
     "jsonwebtoken": "^8.3.0",
     "mysql": "^2.16.0"
   }
