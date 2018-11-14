@@ -61,4 +61,4 @@ typings/
 .next
 .vscode
 package-lock.json
-bootstrap/
+.DS_Store

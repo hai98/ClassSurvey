@@ -2,6 +2,7 @@ var express = require("express");
 var helmet = require("helmet");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
+var formidable = require("formidable");
 // var path = require("path");
 
 var app = express();
@@ -41,6 +42,10 @@ app.post("/login", (req, res) => {
     
     res.set("Content-Type", "text/plain");
     res.send("success");
+});
+
+app.get("/home", (req, res) => {
+    res.render("home");
 });
 
 app.get("/header", (req, res) => {
