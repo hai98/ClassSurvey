@@ -2,7 +2,9 @@ var express = require("express");
 var helmet = require("helmet");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
-var formidable = require("formidable");
+var formidable = require("formidable"); //for file uploads
+var session = require("express-session"); //handle session
+// var mongoose = requihttps://stackoverflow.com/questions/14393423/how-to-make-a-countdown-timer-in-javare("mongoose"); //for mongodb
 // var path = require("path");
 
 var app = express();
