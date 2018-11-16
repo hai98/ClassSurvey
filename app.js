@@ -42,8 +42,7 @@ app.post("/login", (req, res) => {
     console.log(req.body.username);
     console.log(req.body.password);
     
-    res.set("Content-Type", "text/plain");
-    res.send("success");
+    res.redirect(303, "/home");
 });
 
 app.get("/home", (req, res) => {
