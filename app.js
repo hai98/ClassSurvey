@@ -4,8 +4,10 @@ var logger = require("morgan");
 var bodyParser = require("body-parser");
 var formidable = require("formidable"); //for file uploads
 var session = require("express-session"); //handle session
-// var mongoose = requihttps://stackoverflow.com/questions/14393423/how-to-make-a-countdown-timer-in-javare("mongoose"); //for mongodb
+var fs = require("fs");
+// var mongoose = require("mongoose"); //for mongodb
 // var path = require("path");
+var credentials = require("./credentials");
 
 var app = express();
 
@@ -27,11 +29,24 @@ app.use(logger("dev"));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(require("cookie-parser")(credentials.cookieSecret));
+app.use(session());
 app.use(express.static(__dirname + "/public"));
+
+app.use((req, res, next) => {
+    res.locals.flash = req.session.flash;
+    delete req.session.flash;
+    next();
+});
 
 app.get("/", (req, res) => {
     // res.render("home");
-    res.redirect("/login");
+    req.session.flash = {
+        type: "danger",
+        intro: "Validation Error",
+        message: "username not exist",
+    };
+    res.redirect(303, "/login");
 });
 
 app.get("/login", (req, res) => {
@@ -47,6 +62,27 @@ app.post("/login", (req, res) => {
 
 app.get("/home", (req, res) => {
     res.render("home");
+});
+
+app.get("/manage", (req, res) => {
+    res.render("manage");
+});
+
+app.post("/manage/upload", (req, res) => {
+    var form = new formidable.IncomingForm();
+    form.uploadDir = __dirname + "/uploads/";
+    fs.existsSync(form.uploadDir) || fs.mkdirSync(form.uploadDir);
+    form.parse(req, (err, fields, files) => {
+        if(err) return res.redirect(303, "/error");
+        console.log("received files");
+        console.log(files.excelFile.name);
+        var oldPath = files.excelFile.path;
+        var newPath = form.uploadDir + files.excelFile.name;
+        fs.rename(oldPath, newPath, (err) => {
+            if(err) throw err;
+        });
+        res.redirect(303, "/manage");
+    });
 });
 
 app.get("/header", (req, res) => {

@@ -14,7 +14,16 @@
 <body>
     {{{_sections.body}}}
     <div class="container">
-        {{!-- <header><img src="/images/icon-128.png" alt="Survey Logo"></header> --}}
+        {{#if flash}}
+        <div class="alert alert-{{flash.type}} alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <strong>{{flash.intro}}</strong>{{{flash.message}}}
+        </div>
+        {{/if}}
+
         {{{body}}}
     </div>
     <script src="/javascripts/jquery-3.3.1.min.js"></script>
