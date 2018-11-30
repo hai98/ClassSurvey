@@ -5,8 +5,10 @@ var bodyParser = require("body-parser");
 var formidable = require("formidable"); //for file uploads
 var session = require("express-session"); //handle session
 var fs = require("fs");
-// var mongoose = require("mongoose"); //for mongodb
+var xlsx = require("xlsx");
+const exec = require("child_process").execSync;
 // var path = require("path");
+
 var credentials = require("./credentials");
 
 var app = express();
@@ -14,7 +16,7 @@ var app = express();
 //set up handlebars view engine
 var handlebars = require("express-handlebars").create({
     defaultLayout: "main", helpers: {
-        section: function(name, options) {
+        section: function (name, options) {
             if (!this._sections) this._sections = {};
             this._sections[name] = options.fn(this);
             return null;
@@ -24,13 +26,20 @@ var handlebars = require("express-handlebars").create({
 app.engine("handlebars", handlebars.engine);
 app.set("view engine", "handlebars");
 
+var mgdb = require("./database/mongoose");
+
 app.use(helmet());
 app.use(logger("dev"));
+
+app.use(session({
+    secret: credentials.cookieSecret,
+    saveUninitialized: false,
+    resave: true,
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(require("cookie-parser")(credentials.cookieSecret));
-app.use(session());
 app.use(express.static(__dirname + "/public"));
 
 app.use((req, res, next) => {
@@ -56,7 +65,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
     console.log(req.body.username);
     console.log(req.body.password);
-    
+
     res.redirect(303, "/home");
 });
 
@@ -72,16 +81,24 @@ app.post("/manage/upload", (req, res) => {
     var form = new formidable.IncomingForm();
     form.uploadDir = __dirname + "/uploads/";
     fs.existsSync(form.uploadDir) || fs.mkdirSync(form.uploadDir);
+    exec("rm -fr "+ form.uploadDir+"*");
     form.parse(req, (err, fields, files) => {
-        if(err) return res.redirect(303, "/error");
+        if (err) return res.redirect(303, "/error");
         console.log("received files");
         console.log(files.excelFile.name);
         var oldPath = files.excelFile.path;
         var newPath = form.uploadDir + files.excelFile.name;
         fs.rename(oldPath, newPath, (err) => {
-            if(err) throw err;
+            if (err) throw err;
         });
-        res.redirect(303, "/manage");
+        //TODO read excel file
+        var wb = xlsx.readFile(newPath);
+        var data = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: [null, "username", "password", "fullname", "email", "class"] });
+        data.shift();
+        var User = require("./models/user");
+        User.create(data, (err, arr) => { if(err) throw err; });
+        res.json(data);
+        // res.redirect(303, "/manage");
     });
 });
 
