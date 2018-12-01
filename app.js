@@ -4,9 +4,13 @@ var logger = require("morgan");
 var bodyParser = require("body-parser");
 var formidable = require("formidable"); //for file uploads
 var session = require("express-session"); //handle session
+var passport = require("passport");
+var LocalStrategy = require("passport-local").Strategy;
 var fs = require("fs");
 var xlsx = require("xlsx");
 const exec = require("child_process").execSync;
+var mgdb = require("./database/mongoose");
+var User = require("./models/user");
 // var path = require("path");
 
 var credentials = require("./credentials");
@@ -26,7 +30,6 @@ var handlebars = require("express-handlebars").create({
 app.engine("handlebars", handlebars.engine);
 app.set("view engine", "handlebars");
 
-var mgdb = require("./database/mongoose");
 
 app.use(helmet());
 app.use(logger("dev"));
@@ -42,38 +45,69 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(require("cookie-parser")(credentials.cookieSecret));
 app.use(express.static(__dirname + "/public"));
 
-app.use((req, res, next) => {
-    res.locals.flash = req.session.flash;
-    delete req.session.flash;
-    next();
+passport.use(new LocalStrategy(User.authenticate));
+passport.serializeUser(function(user, done) {
+    done(null, user._id);
 });
-
-app.get("/", (req, res) => {
-    // res.render("home");
-    req.session.flash = {
-        type: "danger",
-        intro: "Validation Error",
-        message: "username not exist",
-    };
-    res.redirect(303, "/login");
+passport.deserializeUser(function(userId, done) {
+    User.findById(userId, (err, user) => {
+        if(err) return done(err);
+        done(null, user);
+    });
 });
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.get("/login", (req, res) => {
-    res.render("login");
-});
+// app.use((req, res, next) => {
+//     res.locals.flash = req.session.flash;
+//     delete req.session.flash;
+//     next();
+// });
 
-app.post("/login", (req, res) => {
-    console.log(req.body.username);
-    console.log(req.body.password);
-
+app.get("/", isLoggedIn, (req, res) => {
     res.redirect(303, "/home");
 });
 
-app.get("/home", (req, res) => {
-    res.render("home");
+app.get("/login", (req, res) => {
+    if(req.session.messages){
+        res.locals.flash = {
+            type: "danger",
+            intro: req.session.messages[0],
+            messages: ""
+        };
+        console.log(req.session.messages[0]);
+        delete req.session.messages;
+    }
+    res.render("login");
 });
 
-app.get("/manage", (req, res) => {
+// app.post("/login", (req, res) => {
+//     User.authenticate(req.body.username, req.body.password, function(err, u) {
+//         if(err || !u) {
+//             req.session.flash = {
+//                 type: "danger",
+//                 intro: "Wrong username or password.",
+//                 message: ""
+//             };
+//             res.redirect(303, "/login");
+//         } else {
+//             req.session.uname = { fname: u.fullname };
+//             res.redirect("/home");
+//         }
+//     });
+// });
+
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/home",
+    failureRedirect: "/login",
+    failureMessage: "Invalid username or password"
+}));
+
+app.get("/home", isLoggedIn, (req, res) => {
+    res.render("home", {fname: req.user.fullname});
+});
+
+app.get("/manage", isLoggedIn, (req, res) => {
     res.render("manage");
 });
 
@@ -95,37 +129,41 @@ app.post("/manage/upload", (req, res) => {
         var wb = xlsx.readFile(newPath);
         var data = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: [null, "username", "password", "fullname", "email", "class"] });
         data.shift();
-        var User = require("./models/user");
         User.create(data, (err, arr) => { if(err) throw err; });
         res.json(data);
         // res.redirect(303, "/manage");
     });
 });
 
-app.get("/header", (req, res) => {
-    res.set("Content-Type", "text/plain");
-    var s = "";
-    for (var name in req.headers) s += name + ": " + req.headers[name] + "\n";
-    res.send(s);
-});
+// app.get("/header", (req, res) => {
+//     res.set("Content-Type", "text/plain");
+//     var s = "";
+//     for (var name in req.headers) s += name + ": " + req.headers[name] + "\n";
+//     res.send(s);
+// });
 
-var fortunes = [
-    "Conquer your fears or they will conquer you.",
-    "Rivers need springs.",
-    "Do not fear what you don't know.",
-    "You will have a pleasant surprise.",
-    "Whenever possible, keep it simple.",
-];
+// var fortunes = [
+//     "Conquer your fears or they will conquer you.",
+//     "Rivers need springs.",
+//     "Do not fear what you don't know.",
+//     "You will have a pleasant surprise.",
+//     "Whenever possible, keep it simple.",
+// ];
 
-var tours = [{ id: 0, name: "Hood River", price: 99.99 }, { id: 1, name: "Oregon Coast", price: 193.33 }];
+// var tours = [{ id: 0, name: "Hood River", price: 99.99 }, { id: 1, name: "Oregon Coast", price: 193.33 }];
 
-app.get("/api/tours", (req, res) => {
-    res.json(tours);
-});
+// app.get("/api/tours", (req, res) => {
+//     res.json(tours);
+// });
 
-app.get("/about", (req, res) => {
-    var randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
-    res.render("about", { fortune: randomFortune });
+// app.get("/about", (req, res) => {
+//     var randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+//     res.render("about", { fortune: randomFortune });
+// });
+
+app.get("/logout", (req, res) => {
+    req.logout();
+    res.redirect(303, "/login");
 });
 
 //custom 404 page
@@ -140,5 +178,10 @@ app.use((err, req, res, next) => {
     res.status(500);
     res.render("500");
 });
+
+function isLoggedIn(req, res, next) {
+    if(req.isAuthenticated()) return next();
+    res.redirect("/login");
+}
 
 module.exports = app;

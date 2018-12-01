@@ -15,12 +15,12 @@
     {{{_sections.body}}}
     <div class="container">
         {{#if flash}}
-        <div class="alert alert-{{flash.type}} alert-dismissible fade show" role="alert">
+        <div class="alert alert-{{flash.type}} alert-dismissible fade show text-center" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 <span class="sr-only">Close</span>
             </button>
-            <strong>{{flash.intro}}</strong>{{{flash.message}}}
+            <strong>{{flash.intro}} </strong>{{{flash.message}}}
         </div>
         {{/if}}
 

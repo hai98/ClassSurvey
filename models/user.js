@@ -40,18 +40,16 @@ userSchema.pre("save", function(next) {
     });
 });
 
-userSchema.static.authenticate = function(uname, password, callback) {
+userSchema.statics.authenticate = function(uname, password, callback) {
     User.findOne({ username: uname }).exec(function(err, user) {
         if (err) {
             return callback(err);
         } else if (!user) {
-            var error = new Error("username not found");
-            error.status = 401;
-            return callback(error);
+            return callback(null, false);
         }
-        bcrypt.compare(password, User.password, function(err, result) {
+        bcrypt.compare(password, user.password, function(err, result) {
             if (result === true) return callback(null, user);
-            else return callback();
+            else return callback(null, false);
         });
     });
 };
