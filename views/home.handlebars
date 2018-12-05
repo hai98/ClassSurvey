@@ -3,6 +3,10 @@
     .navbar {
         padding: 0px 100px 0px 100px;
     }
+
+    .modal-lg {
+        max-width: 85%;
+    }
 </style>
 {{/section}}
 {{#section 'body'}}
@@ -71,12 +75,225 @@
     <div class="col-sm-9">
         <div class="card mb-3">
             <div class="card-body">
-                <h5 class="card-title">INT3306 1 - Phat trien ung dung web
+                <h5 class="card-title" data-toggle="modal" data-target="#test-modal">INT3306 1 - Phat trien ung dung
+                    web
                     <span class="badge badge-pill badge-success"><i class="fa fa-check"></i></span>
                 </h5>
                 <h6 class="card-subtitle mb-2 text-muted">Lecturer: Le Dinh Thanh</h6>
                 <a href="#" class="card-link">Card link</a>
                 <a href="#" class="card-link">Another link</a>
+
+                <div class="modal fade" id="test-modal">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Modal Heading</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form action="/home" method="POST">
+                                    <div class="form-group">
+                                        <div class="border-bottom">
+                                            <strong>1. Co so vat chat</strong>
+                                            <div class="d-flex justify-content-end">
+                                                <strong class="mx-4">1</strong>
+                                                <strong class="mx-4">2</strong>
+                                                <strong class="mx-4">3</strong>
+                                                <strong class="mx-4">4</strong>
+                                                <strong class="mx-4">5</strong>
+                                            </div>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between">Giang duong dap ung yeu cau cua
+                                                mon hoc
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio">
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">Cac trang thiet bi tai giang
+                                                duong dap
+                                                ung yeu cau giang day va hoc tap
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                
+                                    <div class="form-group">
+                                        <div class="border-bottom">
+                                            <strong>2. Mon hoc</strong>
+                                            <div class="d-flex justify-content-end">
+                                                <strong class="mx-4">1</strong>
+                                                <strong class="mx-4">2</strong>
+                                                <strong class="mx-4">3</strong>
+                                                <strong class="mx-4">4</strong>
+                                                <strong class="mx-4">5</strong>
+                                            </div>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between">Ban duoc ho tro kip thoi trong
+                                                qua trinh
+                                                hoc mon nay
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio1">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio1">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio1">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio1">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio1">
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">Muc tieu cua mon hoc neu ro kien
+                                                thuc
+                                                nguoi hoc can dat duoc
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio2">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio2">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio2">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio2">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio2">
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">Thoi luong mon hoc duoc phan
+                                                phoi hop ly
+                                                cho cac hinh thuc hoc tap
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio3">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio3">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio3">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio3">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio3">
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">Cac tai lieu phuc vu mon hoc
+                                                duoc cap
+                                                nhat
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio4">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio4">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio4">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio4">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio4">
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">Mon hoc gop phan trang bi kien
+                                                thuc ky
+                                                nang nghe nghiep cho ban
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio5">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio5">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio5">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio5">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio5">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                
+                                    <div class="form-group">
+                                        <div class="border-bottom">
+                                            <strong>2. Mon hoc</strong>
+                                            <div class="d-flex justify-content-end">
+                                                <strong class="mx-4">1</strong>
+                                                <strong class="mx-4">2</strong>
+                                                <strong class="mx-4">3</strong>
+                                                <strong class="mx-4">4</strong>
+                                                <strong class="mx-4">5</strong>
+                                            </div>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between">Ban duoc ho tro kip thoi trong
+                                                qua trinh
+                                                hoc mon nay
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio1">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio1">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio1">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio1">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio1">
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">Muc tieu cua mon hoc neu ro kien
+                                                thuc
+                                                nguoi hoc can dat duoc
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio2">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio2">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio2">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio2">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio2">
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">Thoi luong mon hoc duoc phan
+                                                phoi hop ly
+                                                cho cac hinh thuc hoc tap
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio3">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio3">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio3">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio3">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio3">
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">Cac tai lieu phuc vu mon hoc
+                                                duoc cap
+                                                nhat
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio4">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio4">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio4">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio4">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio4">
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">Mon hoc gop phan trang bi kien
+                                                thuc ky
+                                                nang nghe nghiep cho ban
+                                                <div class="form-check-inline">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio5">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio5">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio5">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio5">
+                                                    <input type="radio" value="1" class="form-check-input mx-4" name="optradio5">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <textarea class="form-control" placeholder="My opinion (Optional)" rows="5" id="comment"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-success mr-4">Submit</button>
+                                            <button type="reset" class="btn btn-info">Cancel</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="card mb-3">
@@ -103,7 +320,7 @@
         </div>
     </div>
 </div>
-
+{{!-- 
 <div class="row">
     <div class="col-sm-12">
         <div class="card mb-5">
@@ -304,4 +521,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}

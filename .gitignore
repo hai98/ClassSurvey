@@ -63,4 +63,3 @@ typings/
 package-lock.json
 .DS_Store
 uploads/
-credentials.js

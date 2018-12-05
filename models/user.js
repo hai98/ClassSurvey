@@ -3,6 +3,8 @@ var bcrypt = require("bcrypt");
 
 var Schema = mongoose.Schema;
 
+//TODO: add enum prop
+
 var userSchema = new Schema({
     username: {
         type: String,
@@ -27,7 +29,8 @@ var userSchema = new Schema({
     class: {
         type: String,
         trim: true
-    }
+    },
+    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }]
 });
 
 userSchema.pre("save", function(next) {
