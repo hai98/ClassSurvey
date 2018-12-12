@@ -53,21 +53,21 @@
 <div class="row">
     <div class="col-sm-3">
         <div class="list-group">
-            <a href="#" id="students-item" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <a href="#" id="students-item" onclick="activeItem('#students-item')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 All Students
-                <span class="badge badge-dark badge-pill">12</span>
+                <span id="num_stu" class="badge badge-dark badge-pill">0</span>
             </a>
-            <a href="#" id="teachers-item" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <a href="#" id="teachers-item" onclick="activeItem('#teachers-item')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 All Teachers
-                <span class="badge badge-dark badge-pill">9</span>
+                <span id="num_tea" class="badge badge-dark badge-pill">0</span>
             </a>
-            <a href="#" id="surveys-item" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <a href="#" id="surveys-item" onclick="activeItem('#surveys-item')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 All Surveys
-                <span class="badge badge-dark badge-warning badge-pill">3</span>
+                <span id="num_sur" class="badge badge-dark badge-warning badge-pill">0</span>
             </a>
-            <a href="#" id="templates-item" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <a href="#" id="templates-item" onclick="activeItem('#templates-item')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 Survey Templates
-                <span class="badge badge-dark badge-warning badge-pill">3</span>
+                <span id="num_temp" class="badge badge-dark badge-warning badge-pill">0</span>
             </a>
         </div>
     </div>
@@ -78,11 +78,11 @@
                 All Students
                 <div class="ml-auto">
                     <!-- Button to Open the Modal -->
-                    <button class="btn btn-sm btn-info" onclick="load()"><i class="fa fa-refresh"></i></button>
-                    <button class="btn btn-sm btn-info" type="button" data-toggle="modal" data-target="#addModal">
+                    <button class="btn btn-sm btn-info" onclick="loadStudents()"><i class="fa fa-refresh"></i></button>
+                    <button class="btn btn-sm btn-info" type="button" data-toggle="modal" data-target="#addStudent">
                         <i class="fa fa-plus"></i>
                     </button>
-                    <div class="modal fade" id="addModal">
+                    <div class="modal fade" id="addStudent">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -339,7 +339,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Class</th>
+                            <th>Email</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -349,12 +349,175 @@
                 </table>
             </div>
         </div>
+
+        <div class="card mb-4" id="surveys-list">
+            <div class="card-header d-flex">
+                All Surveys
+                <div class="ml-auto">
+                    <!-- Button to Open the Modal -->
+                    <button class="btn btn-sm btn-info"><i class="fa fa-refresh"></i></button>
+                    <button class="btn btn-sm btn-info" type="button" data-toggle="modal" data-target="#addSurvey">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    <div class="modal fade" id="addSurvey">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Add Survey</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="#">
+                                        
+                                        <div class="form-group row">
+                                            <div class="col-sm-10">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-sur">
+                        <i class="fa fa-upload"></i>
+                        Import...
+                    </button>
+        
+                    <!-- The Modal -->
+                    <div class="modal fade" id="modal-sur">
+                        <div class="modal-dialog" style="width: 1000px;">
+                            <div class="modal-content">
+        
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Import from excel file</h5>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+        
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    <form action="/manage/upload/course" method="POST" role="form" enctype="multipart/form-data">
+                                        <div class="form-group mb-3">
+                                            <input type="file" class="form-control-file form-control-sm" name="excelFile">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Teacher</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="surveys">
+        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="card mb-4" id="templates-list">
+            <div class="card-header d-flex">
+                All Survey Templates
+                <div class="ml-auto">
+                    <!-- Button to Open the Modal -->
+                    <button class="btn btn-sm btn-info"><i class="fa fa-refresh"></i></button>
+                    <button class="btn btn-sm btn-info" type="button" data-toggle="modal" data-target="#addTemplate">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    <div class="modal fade" id="addTemplate">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Add Template</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="#">
+        
+                                        <div class="form-group row">
+                                            <div class="col-sm-10">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-temp">
+                        <i class="fa fa-upload"></i>
+                        Import...
+                    </button>
+        
+                    <!-- The Modal -->
+                    <div class="modal fade" id="modal-temp">
+                        <div class="modal-dialog" style="width: 1000px;">
+                            <div class="modal-content">
+        
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Import from excel file</h5>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+        
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    <form action="#" method="POST" role="form" enctype="multipart/form-data">
+                                        <div class="form-group mb-3">
+                                            <input type="file" class="form-control-file form-control-sm" name="excelFile">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="templates">
+        
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
 {{#section 'script'}}
 <script>
-    function load() {
+    function loadStudents() {
         $("#students-item").addClass("active");
         $.get("api/students", function (data) {
             var items = [];
@@ -368,11 +531,63 @@
             });
             $("#students").empty();
             $("#students").append(items.join(""));
+            $("#num_stu").html(data.length);
         });
     }
 
+    function loadTeachers() {
+        $.get("api/teachers", function(data) {
+            var items = [];
+            $.each(data, function(index, teacher) {
+                items.push("<tr>");
+                items.push("<td>" + teacher.username + "</td>");
+                items.push("<td>" + teacher.fullname + "</td>");
+                items.push("<td>" + teacher.email + "</td>");
+                items.push('<td><button type="button" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button> <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></td>');
+                items.push("</tr>");
+            });
+            $("#teachers").empty();
+            $("#teachers").append(items.join(""));
+            $("#num_tea").html(data.length);
+        })
+    }
+    
+    function loadSurveys() {
+        $.get("api/surveys", function(data) {
+            var items = [];
+            $.each(data, function(index, survey) {
+                items.push("<tr>");
+                items.push("<td>" + survey.code + "</td>");
+                items.push("<td>" + survey.name + "</td>");
+                items.push("<td>" + survey.teacher + "</td>");
+                items.push('<td>');
+                items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button> ');
+                items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button> ');
+                items.push('<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>');
+                items.push('</td>');
+                items.push("</tr>");
+            });
+            $("#surveys").empty();
+            $("#surveys").append(items.join(""));
+            $("#num_sur").html(data.length);
+        })
+    }
+
+    function activeItem(id) {
+        $(".list-group-item").removeClass("active");
+        $(id).addClass("active");
+        $(".card").hide();
+        $(id.substr(0, id.length-4) + "list").show();
+    }
+
     $("document").ready(function () {
-        load();
+        loadStudents();
+        loadTeachers();
+        loadSurveys();
+        activeItem("#students-item");
+        $("a.list-group-item").click(function(event) {
+            event.preventDefault();
+        })
     });
 </script>
 {{/section}}

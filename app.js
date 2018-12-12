@@ -2,15 +2,7 @@ var express = require("express");
 var helmet = require("helmet");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
-var formidable = require("formidable"); //for file uploads
 var session = require("express-session"); //handle session
-var passport = require("passport");
-var LocalStrategy = require("passport-local").Strategy;
-var fs = require("fs");
-const exec = require("child_process").execSync;
-var mgdb = require("./database/mongoose");
-var User = require("./models/user");
-var readExcel = require("./database/readexcel");
 // var path = require("path");
 
 var credentials = require("./credentials");
@@ -45,6 +37,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(require("cookie-parser")(credentials.cookieSecret));
 app.use(express.static(__dirname + "/public"));
 
+require("./routes/routes")(app);
+/*
 passport.use(new LocalStrategy(User.authenticate));
 passport.serializeUser(function(user, done) {
     done(null, user._id);
@@ -113,7 +107,21 @@ app.get("/manage", (req, res) => {
 });
 
 app.get("/api/students", (req, res) => {
-    User.find({}, "-_id username fullname class").exec(function(err, data){
+    User.find({role: "student"}, "-_id username fullname class").exec(function(err, data){
+        if(err) throw err;
+        res.json(data);
+    });
+});
+
+app.get("/api/teachers", (req, res) => {
+    User.find({role: "teacher"}, "-_id username fullname email").exec(function(err, data) {
+        if(err) throw err;
+        res.json(data);
+    });
+});
+
+app.get("/api/surveys", (req, res) => {
+    Course.find({}).exec(function(err, data) {
         if(err) throw err;
         res.json(data);
     });
@@ -143,6 +151,46 @@ app.post("/manage/upload/students", (req, res) => {
 
 app.post("/manage/upload/teachers", (req, res) => {
     var form  = new formidable.IncomingForm();
+    form.uploadDir = __dirname + "/uploads/";
+    fs.existsSync(form.uploadDir) || fs.mkdirSync(form.uploadDir);
+    //TODO: fix this
+    exec("rm -fr " + form.uploadDir + "*");
+    form.parse(req, (err, fields, files) => {
+        if (err) return res.redirect(303, "/error");
+        console.log("received files");
+        console.log(files.excelFile.name);
+        var oldPath = files.excelFile.path;
+        var newPath = form.uploadDir + files.excelFile.name;
+        fs.rename(oldPath, newPath, (err) => {
+            if (err) throw err;
+        });
+        var data = readExcel.parseTeacher(newPath);
+        //TODO: response to ajax request??
+        res.json(data);
+        // res.redirect(303, "/manage");
+    });
+});
+
+app.post("/manage/upload/course", (req, res) => {
+    var form = new formidable.IncomingForm();
+    form.uploadDir = __dirname + "/uploads/";
+    fs.existsSync(form.uploadDir) || fs.mkdirSync(form.uploadDir);
+    //TODO: fix this
+    exec("rm -fr " + form.uploadDir + "*");
+    form.parse(req, (err, fields, files) => {
+        if (err) return res.redirect(303, "/error");
+        console.log("received files");
+        console.log(files.excelFile.name);
+        var oldPath = files.excelFile.path;
+        var newPath = form.uploadDir + files.excelFile.name;
+        fs.rename(oldPath, newPath, (err) => {
+            if (err) throw err;
+        });
+        var data = readExcel.parseCourse(newPath);
+        //TODO: response to ajax request??
+        res.json(data);
+        // res.redirect(303, "/manage");
+    });
 });
 
 // app.get("/header", (req, res) => {
@@ -193,5 +241,6 @@ function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) return next();
     res.redirect("/login");
 }
+*/
 
 module.exports = app;

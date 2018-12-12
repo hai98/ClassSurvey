@@ -9,6 +9,7 @@ var userSchema = new Schema({
     username: {
         type: String,
         unique: true,
+        index: true,
         required: true,
         trim: true
     },
@@ -30,12 +31,16 @@ var userSchema = new Schema({
         type: String,
         trim: true
     },
+    role: {
+        type: String,
+        required: true,
+        enum: ["student", "teacher", "admin"]
+    },
     courses: [{ type: Schema.Types.ObjectId, ref: "Course" }]
 });
 
 userSchema.pre("save", function(next) {
     var user = this;
-    console.log(user.password);
     bcrypt.hash(user.password, 10, function(err, hash) {
         if (err) return next(err);
         user.password = hash;

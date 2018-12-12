@@ -5,7 +5,6 @@ var Schema = mongoose.Schema;
 var courseSchema = new Schema({
     code: {
         type: String,
-        unique: true,
         trim: true,
         required: true
     },
@@ -14,9 +13,8 @@ var courseSchema = new Schema({
         required: true,
         trim: true
     },
-    lecturer: {
+    teacher: {
         type: String,
-        required: true,
         trim: true
     },
     surveys: [{ type: Schema.Types.ObjectId, ref: "Survey" }]
