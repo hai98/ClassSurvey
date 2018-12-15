@@ -5,8 +5,10 @@ const exec = require("child_process").execSync;
 var mgdb = require("../database/mongoose");
 var User = require("../models/user");
 var Course = require("../models/course");
+var Survey = require("../models/survey");
 var formidable = require("formidable"); //for file uploads
 var readExcel = require("../database/readexcel");
+var async = require("async");
 
 module.exports = function (app) {
     passport.use(new LocalStrategy(User.authenticate));
@@ -98,21 +100,46 @@ module.exports = function (app) {
         });
     });
 
+    app.get("/api/templates", (req, res) => {
+        Survey.find({}).exec(function(err, data) {
+            if(err) throw err;
+            res.json(data);
+        });
+    });
+
+    app.get("/api/student/surveys", (req, res) => {
+        User.findById(req.user._id).exec((err, user) => {
+            if(err) throw err;
+            var data = [];
+            async.each(user.courses, (item, callback) => {
+                Course.findById(item._id).exec((err, course) => {
+                    if(err) callback(err);
+                    if(course) data.push({
+                        name: course.name,
+                        code: course.code,
+                        teacher: course.teacher,
+                        status: course.isDone(user.username)
+                    });
+                    callback();
+                });
+            }, (err) => {
+                if(err) throw err;
+                res.json(data);
+            });
+        });
+    });
+
     app.post("/manage/upload/students", (req, res) => {
         var form = new formidable.IncomingForm();
         form.uploadDir = __dirname + "/../uploads/";
         fs.existsSync(form.uploadDir) || fs.mkdirSync(form.uploadDir);
-        //TODO: fix this
-        exec("rm -fr " + form.uploadDir + "*");
         form.parse(req, (err, fields, files) => {
             if (err) return res.redirect(303, "/error");
             console.log("received files");
             console.log(files.excelFile.name);
             var oldPath = files.excelFile.path;
             var newPath = form.uploadDir + files.excelFile.name;
-            fs.rename(oldPath, newPath, (err) => {
-                if (err) throw err;
-            });
+            fs.renameSync(oldPath, newPath);
             var data = readExcel.parseStudents(newPath);
             //TODO: response to ajax request??
             res.json(data);
@@ -124,17 +151,13 @@ module.exports = function (app) {
         var form = new formidable.IncomingForm();
         form.uploadDir = __dirname + "/../uploads/";
         fs.existsSync(form.uploadDir) || fs.mkdirSync(form.uploadDir);
-        //TODO: fix this
-        exec("rm -fr " + form.uploadDir + "*");
         form.parse(req, (err, fields, files) => {
             if (err) return res.redirect(303, "/error");
             console.log("received files");
             console.log(files.excelFile.name);
             var oldPath = files.excelFile.path;
             var newPath = form.uploadDir + files.excelFile.name;
-            fs.rename(oldPath, newPath, (err) => {
-                if (err) throw err;
-            });
+            fs.renameSync(oldPath, newPath);
             var data = readExcel.parseTeacher(newPath);
             //TODO: response to ajax request??
             res.json(data);
@@ -146,17 +169,13 @@ module.exports = function (app) {
         var form = new formidable.IncomingForm();
         form.uploadDir = __dirname + "/uploads/";
         fs.existsSync(form.uploadDir) || fs.mkdirSync(form.uploadDir);
-        //TODO: fix this
-        exec("rm -fr " + form.uploadDir + "*");
         form.parse(req, (err, fields, files) => {
             if (err) return res.redirect(303, "/error");
             console.log("received files");
             console.log(files.excelFile.name);
             var oldPath = files.excelFile.path;
             var newPath = form.uploadDir + files.excelFile.name;
-            fs.rename(oldPath, newPath, (err) => {
-                if (err) throw err;
-            });
+            fs.renameSync(oldPath, newPath);
             var data = readExcel.parseCourse(newPath);
             //TODO: response to ajax request??
             res.json(data);

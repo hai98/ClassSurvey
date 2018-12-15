@@ -1,6 +1,7 @@
 var xlsx = require("xlsx");
 var User = require("../models/user");
 var Course = require("../models/course");
+var Survey = require("../models/survey");
 
 module.exports = {
     parseStudents: function(filePath) {

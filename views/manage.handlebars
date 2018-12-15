@@ -573,6 +573,25 @@
         })
     }
 
+    function loadTemplates() {
+        $.get("api/templates", function(data) {
+            var items = [];
+            $.each(data, function(index, template) {
+                items.push("<tr>");
+                items.push("<td>" + template.name + "</td>");
+                items.push('<td>');
+                items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button> ');
+                items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button> ');
+                items.push('<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>');
+                items.push('</td>');
+                items.push("</tr>");
+            });
+            $("#templates").empty();
+            $("#templates").append(items.join(""));
+            $("#num_temp").html(data.length);
+        });
+    }
+
     function activeItem(id) {
         $(".list-group-item").removeClass("active");
         $(id).addClass("active");
@@ -584,6 +603,7 @@
         loadStudents();
         loadTeachers();
         loadSurveys();
+        loadTemplates();
         activeItem("#students-item");
         $("a.list-group-item").click(function(event) {
             event.preventDefault();
