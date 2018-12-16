@@ -20,7 +20,7 @@ var courseSchema = new Schema({
         type: String,
         trim: true
     },
-    surveys: [{ type: Schema.Types.ObjectId, ref: "Survey" }],
+    survey: { type: Schema.Types.ObjectId, ref: "Survey" },
     done: {
         type: [String],
         default: []
@@ -33,7 +33,7 @@ courseSchema.pre("save", function(next) {
     var course = this;
     Survey.findOne({isDefault: true}).exec(function(err, res) {
         if(err) throw err;
-        course.surveys.push(res._id);
+        course.survey = res._id;
         next();
     });
 });

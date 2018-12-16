@@ -100,6 +100,18 @@ module.exports = function (app) {
         });
     });
 
+    app.get("/api/survey/:id", (req, res) => {
+        Survey.findById(req.params.id).exec((err, survey) => {
+            res.json(survey.items);
+        });
+    });
+
+    app.post("/api/survey/submit/:courseid", (req, res) => {
+        console.log(req.params.courseid);
+        console.log(req.body);
+        res.redirect(303, "/home");
+    });
+
     app.get("/api/templates", (req, res) => {
         Survey.find({}).exec(function(err, data) {
             if(err) throw err;
@@ -115,10 +127,12 @@ module.exports = function (app) {
                 Course.findById(item._id).exec((err, course) => {
                     if(err) callback(err);
                     if(course) data.push({
+                        id: course._id,
                         name: course.name,
                         code: course.code,
                         teacher: course.teacher,
-                        status: course.isDone(user.username)
+                        status: course.isDone(user.username),
+                        surveyid: course.survey
                     });
                     callback();
                 });

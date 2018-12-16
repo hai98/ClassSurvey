@@ -14,4 +14,5 @@ var surveySchema = new Schema({
     isDefault: Boolean
 });
 
-module.exports = mongoose.model("Survey", surveySchema);
+var Survey = mongoose.model("Survey", surveySchema);
+module.exports = Survey;

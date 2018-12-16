@@ -526,7 +526,10 @@
                 items.push("<td>" + student.username + "</td>");
                 items.push("<td>" + student.fullname + "</td>");
                 items.push("<td>" + student.class + "</td>");
-                items.push('<td><button type="button" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button> <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></td>');
+                items.push('<td><button type="button" class="btn btn-primary btn-sm">\
+                    <i class="fa fa-edit"></i></button> \
+                    <button type="button" class="btn btn-danger btn-sm">\
+                        <i class="fa fa-trash"></i></button></td>');
                 items.push("</tr>");
             });
             $("#students").empty();
