@@ -58,22 +58,53 @@
 <div class="row">
     <div class="col-sm-3">
         <div class="list-group">
-            <a href="#" class="list-group-item active list-group-item-action d-flex justify-content-between align-items-center">
+            <a href="#" id="all" onclick="activeItem(this)" class="list-group-item active list-group-item-action d-flex justify-content-between align-items-center">
                 All Surveys
-                <span id="num-sur" class="badge badge-dark badge-pill">12</span>
+                <span id="num-all" class="badge badge-dark badge-pill">12</span>
             </a>
-            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <a href="#" id="done" onclick="activeItem(this)" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 Completed
                 <span id="num-done" class="badge badge-success badge-pill">9</span>
             </a>
-            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <a href="#" id="not" onclick="activeItem(this)" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 Uncompleted
                 <span id="num-not" class="badge badge-primary badge-warning badge-pill">3</span>
             </a>
         </div>
     </div>
     <div id="surveys" class="col-sm-9">
-        
+{{!-- 
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title" onclick="loadModalContent(this)">INT3306 1 - Phát triển ứng dụng Web 
+                    <span class="badge badge-pill badge-success">
+                        <i class="fa fa-check"></i>
+                    </span>
+                </h5>
+                <h6 class="card-subtitle my-2 text-muted">Teacher: Lê Đình Thanh</h6>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title" onclick="loadModalContent(this)">INT3306 1 - Phát triển ứng dụng Web 
+                    <span class="badge badge-pill badge-success">
+                        <i class="fa fa-check"></i>
+                    </span>
+                </h5>
+                <h6 class="card-subtitle my-2 text-muted">Teacher: Lê Đình Thanh</h6>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title" onclick="loadModalContent(this)">INT3306 1 - Phát triển ứng dụng Web 
+                    <span class="badge badge-pill badge-warning">
+                        <i class="fa fa-pencil"></i>
+                    </span>
+                </h5>
+                <h6 class="card-subtitle my-2 text-muted">Teacher: Lê Đình Thanh</h6>
+            </div>
+        </div>
+         --}}
         <div class="modal fade" id="test-modal">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -116,11 +147,15 @@
     function loadSurveys() {
         $.get("api/student/surveys", function(data) {
             var items = [];
+            var done = 0;
             $.each(data, function(index, value) {
                 items.push('<div class="card mb-3"><div class="card-body"> <h5 class="card-title" onclick="loadModalContent(this)" \
                     sid="' + value.surveyid + '"' + 'cid="' + value.id + '"' + '>');
                 items.push(value.code + ' - ' + value.name);
-                if(value.status) items.push(' <span class="badge badge-pill badge-success"><i class="fa fa-check"></i></span>');
+                if(value.status) {
+                    items.push(' <span class="badge badge-pill badge-success"><i class="fa fa-check"></i></span>');
+                    ++done;
+                }
                 else items.push(' <span class="badge badge-pill badge-warning"><i class="fa fa-pencil"></i></span>');
                 items.push('</h5>');
                 items.push('<h6 class="card-subtitle my-2 text-muted">Teacher: ' + value.teacher + '</h6>');
@@ -128,7 +163,9 @@
             });
             //$("#surveys").empty();
             $("#surveys").append(items.join(""));
-            $("#num-sur").html(data.length);
+            $("#num-all").html(data.length);
+            $("#num-done").html(done);
+            $("#num-not").html(data.length - done);
         });
     }
 
@@ -155,11 +192,11 @@
                 items.push('<ul class="list-group list-group-flush">');
                 $.each(value.contents, function(idx, val) {
                     items.push('<li class="list-group-item d-flex justify-content-between">' + val + '<div class="form-check-inline">\
-                                        <input type="radio" value="1" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="2" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="3" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="4" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="5" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
+                                        <input type="radio" value="1" class="form-check-input mx-4" name="optradio' + x + '">\
+                                        <input type="radio" value="2" class="form-check-input mx-4" name="optradio' + x + '">\
+                                        <input type="radio" value="3" class="form-check-input mx-4" name="optradio' + x + '">\
+                                        <input type="radio" value="4" class="form-check-input mx-4" name="optradio' + x + '">\
+                                        <input type="radio" value="5" class="form-check-input mx-4" name="optradio' + x + '">\
                                     </div>\
                                 </li>');
                     ++x;
@@ -172,8 +209,22 @@
         });
     }
 
+    function activeItem(e) {
+        $(".list-group-item").removeClass("active");
+        $(e).addClass("active");
+        if($(e).attr("id")=="all") $(".card").show(); 
+        else {
+            $(".card").hide();
+            if($(e).attr("id")=="done") $('h5 .badge-success').parent().parent().parent().show();
+            else $('h5 .badge-warning').parent().parent().parent().show();
+        }
+    }
+
     $("document").ready(function() {
         loadSurveys();
+        $("a.list-group-item").click(function(event) {
+            event.preventDefault();
+        });
     });
 </script>
 {{/section}}

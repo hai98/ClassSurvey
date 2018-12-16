@@ -25,6 +25,10 @@ var courseSchema = new Schema({
         type: [String],
         default: []
     },
+    results: {
+        type: Object,
+        default: {comments: [], ques: []}
+    },
     start: Date,
     end: Date
 });

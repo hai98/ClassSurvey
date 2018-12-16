@@ -107,9 +107,29 @@ module.exports = function (app) {
     });
 
     app.post("/api/survey/submit/:courseid", (req, res) => {
+        Course.findById(req.params.courseid).exec((err, course) => {
+            if(course.isDone(req.user.username)) res.redirect(303, "/home");
+            var tmp = course.results;
+            var data = Object.values(req.body);
+            var cmt = data.pop().trim();
+            if(tmp.comments && cmt.length > 0) {
+                tmp.comments.push(cmt);
+            }
+            data = data.map(Number);
+            if(tmp.ques && tmp.ques.length > 0) {
+                for(let i=0; i<data.length; ++i) {
+                    if(tmp.ques[i]) tmp.ques[i] += data[i];
+                    else tmp.ques[i] = data[i];
+                    console.log(i);
+                }
+            } else tmp.ques = data;
+            Course.update({_id: course._id}, {$set: {results: tmp}, $push: {done: req.user.username}}, (err, raw) => {
+                console.log(raw);
+                res.redirect(303, "/home");
+            });
+        });
         console.log(req.params.courseid);
-        console.log(req.body);
-        res.redirect(303, "/home");
+        console.log(Object.values(req.body));
     });
 
     app.get("/api/templates", (req, res) => {
