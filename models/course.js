@@ -3,7 +3,7 @@ var Survey = require("./survey");
 
 var Schema = mongoose.Schema;
 
-//TODO: add time due, save survey result
+//TODO: add time due
 
 var courseSchema = new Schema({
     code: {

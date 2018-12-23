@@ -92,24 +92,30 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="#">
+                                    <form action="students" method="POST">
                                         <div class="form-group row">
-                                            <label for="inputID" class="col-sm-2 col-form-label">ID</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputID" placeholder="12345678">
+                                            <label for="input-id-std" class="col-sm-3 col-form-label">ID (Username):</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="input-id-std" name="stdid" placeholder="12345678" required=true>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="inputNamet" class="col-sm-2 col-form-label">Full Name</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputNamet" placeholder="Nguyen Van A">
+                                            <label for="input-name-std" class="col-sm-3 col-form-label">Full Name:</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="input-name-std" name="stdname" placeholder="Nguyen Van A" required=true>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="inputPasswordt" class="col-sm-2 col-form-label">Password</label>
-                                            <div class="col-sm-10">
-                                                <input type="password" class="form-control" id="inputPasswordt"
-                                                    placeholder="Password">
+                                            <label for="input-passwd-std" class="col-sm-3 col-form-label">Password:</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="form-control" name="stdpasswd" autocomplete="new-password" id="input-passwd-std"
+                                                    placeholder="Password" required=true>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="input-class" class="col-sm-3 col-form-label">Class:</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="stdclass" id="input-class" required=true>
                                             </div>
                                         </div>
                                         {{!-- <fieldset class="form-group">
@@ -141,18 +147,8 @@
                                             </div>
                                         </fieldset> --}}
                                         <div class="form-group row">
-                                            <div class="col-sm-2">Checkbox</div>
-                                            <div class="col-sm-10">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="gridCheck">
-                                                    <label class="form-check-label" for="gridCheck">
-                                                        Example checkbox
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-10">
+                                            <div class="col-sm-3"></div>
+                                            <div class="col-sm-9 d-flex justify-content-end">
                                                 <button type="submit" class="btn btn-primary">Submit</button>
                                             </div>
                                         </div>
@@ -230,7 +226,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="#">
+                                    <form action="#" method="POST" autocomplete="off">
                                         <div class="form-group row">
                                             <label for="inputIDt" class="col-sm-2 col-form-label">ID</label>
                                             <div class="col-sm-10">
@@ -519,7 +515,7 @@
 <script>
     function loadStudents() {
         $("#students-item").addClass("active");
-        $.get("api/students", function (data) {
+        $.get("/students", function (data) {
             var items = [];
             $.each(data, function (index, student) {
                 items.push("<tr>");
@@ -528,7 +524,7 @@
                 items.push("<td>" + student.class + "</td>");
                 items.push('<td><button type="button" class="btn btn-primary btn-sm">\
                     <i class="fa fa-edit"></i></button> \
-                    <button type="button" class="btn btn-danger btn-sm">\
+                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteUser(\'' + student.username +'\')">\
                         <i class="fa fa-trash"></i></button></td>');
                 items.push("</tr>");
             });
@@ -539,14 +535,16 @@
     }
 
     function loadTeachers() {
-        $.get("api/teachers", function(data) {
+        $.get("/teachers", function(data) {
             var items = [];
             $.each(data, function(index, teacher) {
                 items.push("<tr>");
                 items.push("<td>" + teacher.username + "</td>");
                 items.push("<td>" + teacher.fullname + "</td>");
                 items.push("<td>" + teacher.email + "</td>");
-                items.push('<td><button type="button" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button> <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></td>');
+                items.push('<td><button type="button" class="btn btn-primary btn-sm">\
+                    <i class="fa fa-edit"></i></button> <button type="button" class="btn btn-danger btn-sm">\
+                    <i class="fa fa-trash"></i></button></td>');
                 items.push("</tr>");
             });
             $("#teachers").empty();
@@ -556,7 +554,7 @@
     }
     
     function loadSurveys() {
-        $.get("api/surveys", function(data) {
+        $.get("/surveys", function(data) {
             var items = [];
             $.each(data, function(index, survey) {
                 items.push("<tr>");
@@ -577,11 +575,13 @@
     }
 
     function loadTemplates() {
-        $.get("api/templates", function(data) {
+        $.get("/templates", function(data) {
             var items = [];
             $.each(data, function(index, template) {
                 items.push("<tr>");
-                items.push("<td>" + template.name + "</td>");
+                items.push("<td>" + template.name);
+                if(template.isDefault) items.push(' <span class="badge badge-success badge-pill">Default</span>');
+                items.push("</td>");
                 items.push('<td>');
                 items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button> ');
                 items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button> ');
@@ -600,6 +600,17 @@
         $(id).addClass("active");
         $(".card").hide();
         $(id.substr(0, id.length-4) + "list").show();
+    }
+
+    function deleteUser(username) {
+        if(confirm("Are you sure?"))
+            $.ajax({
+                url: "/user/" + username,
+                type: "DELETE",
+                success: function(result) {
+                    alert(result);
+                }
+            });
     }
 
     $("document").ready(function () {

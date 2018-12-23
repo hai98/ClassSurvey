@@ -145,12 +145,14 @@
 <script>
 
     function loadSurveys() {
-        $.get("api/student/surveys", function(data) {
+        $.get("/student/surveys", function(data) {
             var items = [];
             var done = 0;
             $.each(data, function(index, value) {
-                items.push('<div class="card mb-3"><div class="card-body"> <h5 class="card-title" onclick="loadModalContent(this)" \
-                    sid="' + value.surveyid + '"' + 'cid="' + value.id + '"' + '>');
+                items.push('<div class="card mb-3"><div class="card-body"> <h5 class="card-title"');
+                if(!value.status)
+                    items.push(' onclick="loadModalContent(this)"'); 
+                items.push('sid="' + value.surveyid + '"' + 'cid="' + value.id + '"' + '>');
                 items.push(value.code + ' - ' + value.name);
                 if(value.status) {
                     items.push(' <span class="badge badge-pill badge-success"><i class="fa fa-check"></i></span>');
@@ -159,6 +161,8 @@
                 else items.push(' <span class="badge badge-pill badge-warning"><i class="fa fa-pencil"></i></span>');
                 items.push('</h5>');
                 items.push('<h6 class="card-subtitle my-2 text-muted">Teacher: ' + value.teacher + '</h6>');
+                if(!value.status)
+                    items.push('<h6 class="card-subtitle my-2 text-muted font-weight-light">Due date: ' + value.due + '</h6>');
                 items.push('</div></div>');
             });
             //$("#surveys").empty();
@@ -172,8 +176,8 @@
     function loadModalContent(e){
         var id = e.getAttribute("sid");
         $(".modal-title").html(e.textContent);
-        $("#form-survey").attr("action", "api/survey/submit/" + e.getAttribute("cid"));
-        $.get("api/survey/"+id, function(data) {
+        $("#form-survey").attr("action", "/survey/submit/" + e.getAttribute("cid"));
+        $.get("/survey/"+id, function(data) {
             var items = [];
             var x = 0;
             $.each(data, function(index, value) {
@@ -192,11 +196,11 @@
                 items.push('<ul class="list-group list-group-flush">');
                 $.each(value.contents, function(idx, val) {
                     items.push('<li class="list-group-item d-flex justify-content-between">' + val + '<div class="form-check-inline">\
-                                        <input type="radio" value="1" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="2" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="3" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="4" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="5" class="form-check-input mx-4" name="optradio' + x + '">\
+                                        <input type="radio" value="1" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
+                                        <input type="radio" value="2" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
+                                        <input type="radio" value="3" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
+                                        <input type="radio" value="4" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
+                                        <input type="radio" value="5" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
                                     </div>\
                                 </li>');
                     ++x;

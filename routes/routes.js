@@ -76,37 +76,38 @@ module.exports = function (app) {
 
     // app.get("/manage", isLoggedIn, (req, res) => {
     app.get("/manage", (req, res) => {
+        res.locals.flash = req.session.flash;
         res.render("manage");
     });
 
-    app.get("/api/students", (req, res) => {
+    app.get("/students", (req, res) => {
         User.find({ role: "student" }, "-_id username fullname class").exec(function (err, data) {
             if (err) throw err;
             res.json(data);
         });
     });
 
-    app.get("/api/teachers", (req, res) => {
+    app.get("/teachers", (req, res) => {
         User.find({ role: "teacher" }, "-_id username fullname email").exec(function (err, data) {
             if (err) throw err;
             res.json(data);
         });
     });
 
-    app.get("/api/surveys", (req, res) => {
+    app.get("/surveys", (req, res) => {
         Course.find({}).exec(function (err, data) {
             if (err) throw err;
             res.json(data);
         });
     });
 
-    app.get("/api/survey/:id", (req, res) => {
+    app.get("/survey/:id", (req, res) => {
         Survey.findById(req.params.id).exec((err, survey) => {
             res.json(survey.items);
         });
     });
 
-    app.post("/api/survey/submit/:courseid", (req, res) => {
+    app.post("/survey/submit/:courseid", (req, res) => {
         Course.findById(req.params.courseid).exec((err, course) => {
             if(course.isDone(req.user.username)) res.redirect(303, "/home");
             var tmp = course.results;
@@ -132,14 +133,14 @@ module.exports = function (app) {
         console.log(Object.values(req.body));
     });
 
-    app.get("/api/templates", (req, res) => {
+    app.get("/templates", (req, res) => {
         Survey.find({}).exec(function(err, data) {
             if(err) throw err;
             res.json(data);
         });
     });
 
-    app.get("/api/student/surveys", (req, res) => {
+    app.get("/student/surveys", (req, res) => {
         User.findById(req.user._id).exec((err, user) => {
             if(err) throw err;
             var data = [];
@@ -152,7 +153,8 @@ module.exports = function (app) {
                         code: course.code,
                         teacher: course.teacher,
                         status: course.isDone(user.username),
-                        surveyid: course.survey
+                        surveyid: course.survey,
+                        due: course.end.toLocaleString("vi-VN")
                     });
                     callback();
                 });
@@ -160,6 +162,40 @@ module.exports = function (app) {
                 if(err) throw err;
                 res.json(data);
             });
+        });
+    });
+
+    app.post("/students", (req, res) => {
+        console.log(req.body);
+        User.create({
+            username: req.body.stdid,
+            password: req.body.stdpasswd,
+            fullname: req.body.stdname,
+            class: req.body.stdclass,
+            email: req.body.stdid + "@vnu.edu.vn",
+            role: "student",
+            courses: []
+        }, (err, u) => {
+            if(err) {
+                console.log(err);
+                req.session.flash = {
+                    type: "danger",
+                    intro: "Opps!",
+                    message: "Something went wrong"
+                };
+            } else req.session.flash = {
+                type: "success",
+                intro: "Success!",
+                message: "Added 1 student"
+            };
+            res.redirect(303, "/manage");
+        });
+    });
+
+    app.delete("/user/:id", (req, res) => {
+        User.deleteOne({username: req.params.id}).exec((err, result) => {
+            if(err) throw err;
+            res.json(result);
         });
     });
 
@@ -234,7 +270,7 @@ module.exports = function (app) {
 
     // var tours = [{ id: 0, name: "Hood River", price: 99.99 }, { id: 1, name: "Oregon Coast", price: 193.33 }];
 
-    // app.get("/api/tours", (req, res) => {
+    // app.get("/tours", (req, res) => {
     //     res.json(tours);
     // });
 

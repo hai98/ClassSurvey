@@ -3,7 +3,6 @@ var bcrypt = require("bcrypt");
 
 var Schema = mongoose.Schema;
 
-//TODO: add enum prop
 
 var userSchema = new Schema({
     username: {
