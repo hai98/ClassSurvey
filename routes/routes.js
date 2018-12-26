@@ -77,18 +77,19 @@ module.exports = function (app) {
     // app.get("/manage", isLoggedIn, (req, res) => {
     app.get("/manage", (req, res) => {
         res.locals.flash = req.session.flash;
+        delete req.session.flash;
         res.render("manage");
     });
 
     app.get("/students", (req, res) => {
-        User.find({ role: "student" }, "-_id username fullname class").exec(function (err, data) {
+        User.find({ role: "student" }, "username fullname class").exec(function (err, data) {
             if (err) throw err;
             res.json(data);
         });
     });
 
     app.get("/teachers", (req, res) => {
-        User.find({ role: "teacher" }, "-_id username fullname email").exec(function (err, data) {
+        User.find({ role: "teacher" }, "username fullname email").exec(function (err, data) {
             if (err) throw err;
             res.json(data);
         });
@@ -101,6 +102,98 @@ module.exports = function (app) {
         });
     });
 
+    app.delete("/manage/survey/:id", (req, res) => {
+        Course.findByIdAndRemove(req.params.id, (err, course) => {
+            if(err) throw err;
+            User.updateMany({}, {$pull: {courses: course._id}}).exec((err, ok) => {
+                if(err) throw err;
+            });
+            res.json({ok: 1});
+        });
+    });
+
+    app.post("/manage/survey/edit", (req, res) => {
+        console.log(req.body);
+        Course.updateOne({_id: req.body.surveyid}, {end: new Date(req.body.enddate)}).exec((err, ok) => {
+            if(err) {
+                console.log(err);
+                req.session.flash = {
+                    type: "danger",
+                    intro: "Opps!",
+                    message: "Something went wrong"
+                };
+            } else req.session.flash = {
+                type: "success",
+                intro: "Success!",
+                message: "Saved"
+            };
+            res.redirect(303, "/manage");
+        });
+    });
+
+    app.post("/teachers", (req, res) => {
+        User.create({
+            username: req.body.teaid,
+            password: req.body.teapasswd,
+            fullname: req.body.teaname,
+            email: req.body.teaid + "@vnu.edu.vn",
+            role: "teacher",
+            courses: []
+        }, (err, u) => {
+            if(err) {
+                console.log(err);
+                req.session.flash = {
+                    type: "danger",
+                    intro: "Opps!",
+                    message: "Something went wrong"
+                };
+            } else req.session.flash = {
+                type: "success",
+                intro: "Success!",
+                message: "Added 1 teacher"
+            };
+            res.redirect(303, "/manage");
+        });
+    });
+
+    app.post("/manage/teachers/edit", (req, res) => {
+        User.update({username: req.body.teaid.trim()}, {
+            password: req.body.teapasswd,
+            fullname: req.body.teaname.trim(),
+        }).exec((err, ok) => {
+            if(err) {
+                console.log(err);
+                req.session.flash = {
+                    type: "danger",
+                    intro: "Opps!",
+                    message: "Something went wrong"
+                };
+            } else req.session.flash = {
+                type: "success",
+                intro: "Success!",
+                message: "Saved"
+            };
+            console.log(ok);
+            res.redirect(303, "/manage");
+        });
+    });
+
+    app.get("/survey/:id/result", (req, res) => {
+        Course.findById(req.params.id).populate("survey").exec((err, course) => {
+            if(err) throw err;
+            User.find({role: "student", courses: course._id}, "username fullname class", (err, users) => {
+                if(err) throw err;
+                res.json({
+                    heading: course.code + " - " + course.name,
+                    done: course.done,
+                    result: course.processResult(),
+                    survey: course.survey.items,
+                    stdList: users,
+                });
+            });
+        });
+    });
+
     app.get("/survey/:id", (req, res) => {
         Survey.findById(req.params.id).exec((err, survey) => {
             res.json(survey.items);
@@ -109,7 +202,7 @@ module.exports = function (app) {
 
     app.post("/survey/submit/:courseid", (req, res) => {
         Course.findById(req.params.courseid).exec((err, course) => {
-            if(course.isDone(req.user.username)) res.redirect(303, "/home");
+            if(course.isDone(req.user.username) || course.isOverDue()) res.redirect(303, "/home");
             var tmp = course.results;
             var data = Object.values(req.body);
             var cmt = data.pop().trim();
@@ -117,13 +210,14 @@ module.exports = function (app) {
                 tmp.comments.push(cmt);
             }
             data = data.map(Number);
-            if(tmp.ques && tmp.ques.length > 0) {
-                for(let i=0; i<data.length; ++i) {
-                    if(tmp.ques[i]) tmp.ques[i] += data[i];
-                    else tmp.ques[i] = data[i];
-                    console.log(i);
-                }
-            } else tmp.ques = data;
+            tmp.ques.push(data);
+            // if(tmp.ques && tmp.ques.length > 0) {
+            //     for(let i=0; i<data.length; ++i) {
+            //         if(tmp.ques[i]) tmp.ques[i] += data[i];
+            //         else tmp.ques[i] = data[i];
+            //         console.log(i);
+            //     }
+            // } else tmp.ques = data;
             Course.update({_id: course._id}, {$set: {results: tmp}, $push: {done: req.user.username}}, (err, raw) => {
                 console.log(raw);
                 res.redirect(303, "/home");
@@ -140,6 +234,57 @@ module.exports = function (app) {
         });
     });
 
+    app.get("/templates/:id", (req, res) => {
+        Survey.findById(req.params.id).exec((err, tmp) => {
+            if(err) throw err;
+            res.json(tmp);
+        });
+    });
+
+    app.delete("/manage/template/:id", (req, res) => {
+        Survey.countDocuments({}).exec((err, num) => {
+            if(err || num <2) res.json({ok: 0});
+            Survey.deleteOne({_id: req.params.id}).exec((err, result) => {
+                if(err) throw err;
+                res.json(result);
+            });
+        });
+    });
+
+    app.post("/manage/templates", (req, res) => {
+        var tmp = {
+            name: req.body.tempName,
+            isDefault: false,
+            items: []
+        };
+        var len = JSON.parse("[" + req.body.lengths + "]");
+        var titles = req.body.title;
+        var x=0;
+        for(let i=0; i<titles.length; ++i) {
+            var itm = {
+                title: titles[i],
+                contents: req.body.ques.slice(x, x+len[i])
+            };
+            tmp.items.push(itm);
+            x+=len[i];
+        }
+        Survey.create(tmp, (err, u) => {
+            if(err) {
+                console.log(err);
+                req.session.flash = {
+                    type: "danger",
+                    intro: "Opps!",
+                    message: "Something went wrong"
+                };
+            } else req.session.flash = {
+                type: "success",
+                intro: "Success!",
+                message: "Added 1 template"
+            };
+            res.redirect(303, "/manage");
+        });
+    });
+
     app.get("/student/surveys", (req, res) => {
         User.findById(req.user._id).exec((err, user) => {
             if(err) throw err;
@@ -152,9 +297,9 @@ module.exports = function (app) {
                         name: course.name,
                         code: course.code,
                         teacher: course.teacher,
-                        status: course.isDone(user.username),
+                        status: [course.isDone(user.username), course.isOverDue()],
                         surveyid: course.survey,
-                        due: course.end.toLocaleString("vi-VN")
+                        end: course.end
                     });
                     callback();
                 });
@@ -166,7 +311,6 @@ module.exports = function (app) {
     });
 
     app.post("/students", (req, res) => {
-        console.log(req.body);
         User.create({
             username: req.body.stdid,
             password: req.body.stdpasswd,
@@ -192,7 +336,30 @@ module.exports = function (app) {
         });
     });
 
-    app.delete("/user/:id", (req, res) => {
+    app.post("/manage/students/edit", (req, res) => {
+        User.update({username: req.body.stdid.trim()}, {
+            password: req.body.stdpasswd,
+            fullname: req.body.stdname.trim(),
+            class: req.body.stdclass.trim(),
+        }).exec((err, ok) => {
+            if(err) {
+                console.log(err);
+                req.session.flash = {
+                    type: "danger",
+                    intro: "Opps!",
+                    message: "Something went wrong"
+                };
+            } else req.session.flash = {
+                type: "success",
+                intro: "Success!",
+                message: "Saved"
+            };
+            console.log(ok);
+            res.redirect(303, "/manage");
+        });
+    });
+
+    app.delete("/manage/user/:id", (req, res) => {
         User.deleteOne({username: req.params.id}).exec((err, result) => {
             if(err) throw err;
             res.json(result);

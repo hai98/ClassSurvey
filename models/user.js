@@ -47,6 +47,20 @@ userSchema.pre("save", function(next) {
     });
 });
 
+userSchema.pre("update", function(next) {
+    var user = this;
+    var passwd = user.getUpdate().password;
+    if(passwd.length <=0) {
+        delete this.getUpdate().password;
+        return next();
+    }
+    bcrypt.hash(passwd, 10, function(err, hash) {
+        if(err) return next(err);
+        user.getUpdate().password = hash;
+        return next();
+    });
+});
+
 userSchema.statics.authenticate = function(uname, password, callback) {
     User.findOne({ username: uname }).exec(function(err, user) {
         if (err) {

@@ -150,19 +150,18 @@
             var done = 0;
             $.each(data, function(index, value) {
                 items.push('<div class="card mb-3"><div class="card-body"> <h5 class="card-title"');
-                if(!value.status)
+                if(!value.status[0] && !value.status[1])
                     items.push(' onclick="loadModalContent(this)"'); 
                 items.push('sid="' + value.surveyid + '"' + 'cid="' + value.id + '"' + '>');
                 items.push(value.code + ' - ' + value.name);
-                if(value.status) {
+                if(value.status[0]) {
                     items.push(' <span class="badge badge-pill badge-success"><i class="fa fa-check"></i></span>');
                     ++done;
                 }
                 else items.push(' <span class="badge badge-pill badge-warning"><i class="fa fa-pencil"></i></span>');
                 items.push('</h5>');
                 items.push('<h6 class="card-subtitle my-2 text-muted">Teacher: ' + value.teacher + '</h6>');
-                if(!value.status)
-                    items.push('<h6 class="card-subtitle my-2 text-muted font-weight-light">Due date: ' + value.due + '</h6>');
+                items.push('<h6 class="card-subtitle my-2 text-muted font-weight-light">Due date: ' + (new Date(value.end).toLocaleString("vi-VN")) + '</h6>');
                 items.push('</div></div>');
             });
             //$("#surveys").empty();

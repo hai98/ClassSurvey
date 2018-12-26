@@ -24,10 +24,6 @@
                 <a class="nav-link disabled" href="#">Disabled</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-sm-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-success my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>
-        </form>
         <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
@@ -108,7 +104,7 @@
                                         <div class="form-group row">
                                             <label for="input-passwd-std" class="col-sm-3 col-form-label">Password:</label>
                                             <div class="col-sm-9">
-                                                <input type="password" class="form-control" name="stdpasswd" autocomplete="new-password" id="input-passwd-std"
+                                                <input type="password" pattern="^.{8,}" title="At least 8 charaters" class="form-control" name="stdpasswd" autocomplete="new-password" id="input-passwd-std"
                                                     placeholder="Password" required=true>
                                             </div>
                                         </div>
@@ -118,34 +114,6 @@
                                                 <input type="text" class="form-control" name="stdclass" id="input-class" required=true>
                                             </div>
                                         </div>
-                                        {{!-- <fieldset class="form-group">
-                                            <div class="row">
-                                                <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-                                                <div class="col-sm-10">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="gridRadios"
-                                                            id="gridRadios1" value="option1" checked>
-                                                        <label class="form-check-label" for="gridRadios1">
-                                                            First radio
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="gridRadios"
-                                                            id="gridRadios2" value="option2">
-                                                        <label class="form-check-label" for="gridRadios2">
-                                                            Second radio
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check disabled">
-                                                        <input class="form-check-input" type="radio" name="gridRadios"
-                                                            id="gridRadios3" value="option3" disabled>
-                                                        <label class="form-check-label" for="gridRadios3">
-                                                            Third disabled radio
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </fieldset> --}}
                                         <div class="form-group row">
                                             <div class="col-sm-3"></div>
                                             <div class="col-sm-9 d-flex justify-content-end">
@@ -154,8 +122,53 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="modal fade" id="editStudent">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Student</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="manage/students/edit" method="POST">
+                                        <div class="form-group row">
+                                            <label for="edit-id-std" class="col-sm-3 col-form-label">ID (Username):</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="edit-id-std" name="stdid" placeholder="12345678" required=true>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="edit-name-std" class="col-sm-3 col-form-label">Full Name:</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="edit-name-std" name="stdname" placeholder="Nguyen Van A" required=true>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="edit-passwd-std" class="col-sm-3 col-form-label">Password:</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="form-control" pattern="^.{8,}" title="At least 8 charaters" name="stdpasswd" autocomplete="new-password" id="edit-passwd-std"
+                                                    placeholder="New Password">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="edit-class" class="col-sm-3 col-form-label">Class:</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="stdclass" id="edit-class" required=true>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-3"></div>
+                                            <div class="col-sm-9 d-flex justify-content-end">
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -189,6 +202,7 @@
                             </div>
                         </div>
                     </div>
+                    
                 </div>
             </div>
             <div class="card-body p-0">
@@ -226,74 +240,77 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="#" method="POST" autocomplete="off">
+                                    <form action="teachers" method="POST">
                                         <div class="form-group row">
-                                            <label for="inputIDt" class="col-sm-2 col-form-label">ID</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputIDt" placeholder="">
+                                            <label for="input-id-tea" class="col-sm-3 col-form-label">ID (Username):</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="teaid" id="input-id-tea" placeholder="">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="inputName" class="col-sm-2 col-form-label">Full Name</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputName" placeholder="Nguyen Van A">
+                                            <label for="inputName" class="col-sm-3 col-form-label">Full Name:</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="teaname" id="inputName" placeholder="Nguyen Van A">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
-                                            <div class="col-sm-10">
-                                                <input type="password" class="form-control" id="inputPassword3"
-                                                    placeholder="Password">
+                                            <label for="input-passwd-tea" class="col-sm-3 col-form-label">Password:</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" pattern="^.{8,}" title="At least 8 charaters" class="form-control" id="input-passwd-tea"
+                                                    placeholder="Password" name="teapasswd" autocomplete="new-password">
                                             </div>
                                         </div>
-                                        {{!-- <fieldset class="form-group">
-                                            <div class="row">
-                                                <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-                                                <div class="col-sm-10">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="gridRadios"
-                                                            id="gridRadios1" value="option1" checked="">
-                                                        <label class="form-check-label" for="gridRadios1">
-                                                            First radio
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="gridRadios"
-                                                            id="gridRadios2" value="option2">
-                                                        <label class="form-check-label" for="gridRadios2">
-                                                            Second radio
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check disabled">
-                                                        <input class="form-check-input" type="radio" name="gridRadios"
-                                                            id="gridRadios3" value="option3" disabled="">
-                                                        <label class="form-check-label" for="gridRadios3">
-                                                            Third disabled radio
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </fieldset> --}}
+                                        
                                         <div class="form-group row">
-                                            <div class="col-sm-2">Checkbox</div>
-                                            <div class="col-sm-10">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="gridCheck1">
-                                                    <label class="form-check-label" for="gridCheck1">
-                                                        Example checkbox
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-10">
+                                            <div class="col-sm-3"></div>
+                                            <div class="col-sm-9 d-flex justify-content-end">
                                                 <button type="submit" class="btn btn-primary">Submit</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="modal fade" id="editTeacher">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Teacher</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="manage/teachers/edit" method="POST">
+                                        <div class="form-group row">
+                                            <label for="edit-id-tea" class="col-sm-3 col-form-label">ID (Username):</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="teaid" id="edit-id-tea" placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="editName" class="col-sm-3 col-form-label">Full Name:</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="teaname" id="editName" placeholder="Nguyen Van A">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="edit-passwd-tea" class="col-sm-3 col-form-label">Password:</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" pattern="^.{8,}" title="At least 8 charaters" class="form-control" id="edit-passwd-tea"
+                                                    placeholder="New Password" name="teapasswd" autocomplete="new-password">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group row">
+                                            <div class="col-sm-3"></div>
+                                            <div class="col-sm-9 d-flex justify-content-end">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -374,9 +391,6 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="modal-footer">
-        
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -418,6 +432,7 @@
                             <th>ID</th>
                             <th>Name</th>
                             <th>Teacher</th>
+                            <th>End Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -439,7 +454,7 @@
                         <i class="fa fa-plus"></i>
                     </button>
                     <div class="modal fade" id="addTemplate">
-                        <div class="modal-dialog modal-lg">
+                        <div class="modal-dialog modal-lg" style="max-width: 80%">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLongTitle">Add Template</h5>
@@ -448,50 +463,51 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="#">
-        
+                                    <form id="form-template" action="manage/templates" method="post">
+                                        <input id="leng" type="hidden" name="lengths">
                                         <div class="form-group row">
-                                            <div class="col-sm-10">
+                                            <label for="new-sur-name" class="col-sm-2 col-form-label">Template Name: </label>
+                                            <div class="col-sm-5">
+                                                <input type="text" class="form-control" name="tempName" id="new-sur-name">
+                                            </div>
+                                        </div>
+                                        <div class="border p-4 mb-3">
+                                        <div class="form-group row">
+                                            <label for="test" class="col-sm-1 col-form-label">Title: </label>
+                                            <div class="col-sm-11">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" name="title" class="form-control">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-primary" onclick="addItem(this)" type="button"><i class="fa fa-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1"></div>
+                                            <label for="test1" class="col-sm-2 col-form-label">Question: </label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" name="ques" class="form-control">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-info" onclick="addQuest(this)" type="button"><i class="fa fa-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12 d-flex justify-content-end">
                                                 <button type="submit" class="btn btn-primary">Submit</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="modal-footer">
-        
-                                </div>
                             </div>
                         </div>
                     </div>
         
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-temp">
-                        <i class="fa fa-upload"></i>
-                        Import...
-                    </button>
-        
-                    <!-- The Modal -->
-                    <div class="modal fade" id="modal-temp">
-                        <div class="modal-dialog" style="width: 1000px;">
-                            <div class="modal-content">
-        
-                                <!-- Modal Header -->
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Import from excel file</h5>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-        
-                                <!-- Modal body -->
-                                <div class="modal-body">
-                                    <form action="#" method="POST" role="form" enctype="multipart/form-data">
-                                        <div class="form-group mb-3">
-                                            <input type="file" class="form-control-file form-control-sm" name="excelFile">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                   
                 </div>
             </div>
             <div class="card-body p-0">
@@ -509,6 +525,123 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="viewSurvey">
+            <div class="modal-dialog modal-lg" style="max-width: 80%">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 id="modal-heading" class="modal-title">Survey Result</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                Done/Total: <strong id="dt">34/25</strong>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 25%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn btn-sm btn-primary" aria-expanded="false" type="button" data-toggle="collapse" data-target="#std-list">Show Students List</button>
+                                <button class="btn btn-sm btn-primary" aria-expanded="false" type="button" data-toggle="collapse" data-target="#result">Show Result</button>
+                            </div>
+                        </div>
+                        <div class="row collapse" id="std-list">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-8">
+                                <table class="table table-sm table-bordered table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Class</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="std-done">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-sm-2"></div>
+                        </div>
+                        <div class="row collapse" id="result">
+                            <div class="col-sm-12">
+                                <table class="table table-sm table-bordered table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Criteria</th>
+                                            <th>M</th>
+                                            <th>STD</th>
+                                            <th>M1</th>
+                                            <th>STD1</th>
+                                            <th>M2</th>
+                                            <th>STD2</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="result-list">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editSurvey">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 id="modal-heading" class="modal-title">Edit Survey</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="manage/survey/edit" method="post">
+                            <input type="hidden" name="surveyid" id="survey-edit-id" class="form-control">
+                            <div class="form-group row">
+                                <label for="edit-emd-date" class="col-sm-3 col-form-label">End date: </label>
+                                <div class="col-sm-9">
+                                        <input type="datetime-local" class="form-control" name="enddate" id="edit-emd-date">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="viewTemplate">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 id="template-heading" class="modal-title">View Template</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <dvi class="col-sm-12" id="cri-list">
+                                
+                            </dvi>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 </div>
 
 {{#section 'script'}}
@@ -522,7 +655,7 @@
                 items.push("<td>" + student.username + "</td>");
                 items.push("<td>" + student.fullname + "</td>");
                 items.push("<td>" + student.class + "</td>");
-                items.push('<td><button type="button" class="btn btn-primary btn-sm">\
+                items.push('<td><button type="button" class="btn btn-primary btn-sm" onclick="editStd(this)">\
                     <i class="fa fa-edit"></i></button> \
                     <button type="button" class="btn btn-danger btn-sm" onclick="deleteUser(\'' + student.username +'\')">\
                         <i class="fa fa-trash"></i></button></td>');
@@ -542,8 +675,9 @@
                 items.push("<td>" + teacher.username + "</td>");
                 items.push("<td>" + teacher.fullname + "</td>");
                 items.push("<td>" + teacher.email + "</td>");
-                items.push('<td><button type="button" class="btn btn-primary btn-sm">\
-                    <i class="fa fa-edit"></i></button> <button type="button" class="btn btn-danger btn-sm">\
+                items.push('<td><button type="button" class="btn btn-primary btn-sm" onclick="editTea(this)">\
+                    <i class="fa fa-edit"></i></button> \
+                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteUser(\''+ teacher.username +'\')">\
                     <i class="fa fa-trash"></i></button></td>');
                 items.push("</tr>");
             });
@@ -561,10 +695,14 @@
                 items.push("<td>" + survey.code + "</td>");
                 items.push("<td>" + survey.name + "</td>");
                 items.push("<td>" + survey.teacher + "</td>");
+                items.push("<td>" + (new Date(survey.end).toLocaleString("vi-VN")) + "</td>");
                 items.push('<td>');
-                items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button> ');
-                items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button> ');
-                items.push('<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>');
+                items.push('<button type="button" class="btn btn-primary btn-sm" onclick="viewSurvey(\'' + survey._id +'\')"\
+                ><i class="fa fa-eye"></i></button> ');
+                items.push('<button type="button" class="btn btn-primary btn-sm" onclick="editSurvey(\'' + survey._id +'\')">\
+                    <i class="fa fa-edit"></i></button> ');
+                items.push('<button type="button" class="btn btn-danger btn-sm" onclick="deleteSurvey(\'' + survey._id +'\')">\
+                    <i class="fa fa-trash"></i></button>');
                 items.push('</td>');
                 items.push("</tr>");
             });
@@ -583,9 +721,11 @@
                 if(template.isDefault) items.push(' <span class="badge badge-success badge-pill">Default</span>');
                 items.push("</td>");
                 items.push('<td>');
-                items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button> ');
+                items.push('<button type="button" class="btn btn-primary btn-sm" onclick="viewTemplate(\'' + template._id +'\')">\
+                    <i class="fa fa-eye"></i></button> ');
                 items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button> ');
-                items.push('<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>');
+                items.push('<button type="button" class="btn btn-danger btn-sm" onclick="delTemplate(\'' + template._id +'\')">\
+                    <i class="fa fa-trash"></i></button>');
                 items.push('</td>');
                 items.push("</tr>");
             });
@@ -605,12 +745,146 @@
     function deleteUser(username) {
         if(confirm("Are you sure?"))
             $.ajax({
-                url: "/user/" + username,
+                url: "/manage/user/" + username,
                 type: "DELETE",
                 success: function(result) {
-                    alert(result);
+                    if(result.ok > 0) alert("Success!");
+                    loadStudents();
+                    loadTeachers();
                 }
             });
+    }
+
+    function editStd(e) {
+        var edit = $("#editStudent");
+        var info = $(e).parent().siblings();
+        $("#edit-id-std").attr("value", info[0].innerHTML);
+        $("#edit-name-std").attr("value", info[1].innerHTML);
+        $("#edit-class").attr("value", info[2].innerHTML);
+        edit.modal({show: true});
+    }
+
+    function editTea(e) {
+        var info = $(e).parent().siblings();
+        $("#edit-id-tea").attr("value", info[0].innerHTML);
+        $("#editName").attr("value", info[1].innerHTML);
+        $("#editTeacher").modal({show: true});
+    }
+
+    function viewSurvey(id) {
+        $.get("survey/" + id + "/result", function(data) {
+            $("#modal-heading").html(data.heading);
+            $("#dt").html(data.done.length + '/' + data.stdList.length);
+            percent = Math.round(100*data.done.length/data.stdList.length);
+            $(".progress-bar").attr("style", "width: " + percent + "%");
+            var items = [];
+            $.each(data.stdList, function(index, value) {
+                if(data.done.indexOf(value.username) > -1)
+                    items.push('<tr class="table-primary">');
+                else
+                    items.push("<tr>");
+                items.push("<td>" + value.username + "</td>");
+                items.push("<td>" + value.fullname + "</td>");
+                items.push("<td>" + value.class + "</td>");
+                items.push("</td>");
+            });
+            $("#std-done").html(items.join(""));
+            var cri = [];
+            data.survey.forEach(function(value) {
+                cri = cri.concat(value.contents);
+            });
+            var list = '';
+            if(!data.result) {
+                data.result = {};
+                data.result.m =  Array(cri.length).fill(0);
+                data.result.std =  data.result.m;
+            }
+            $.each(cri, function(index, value) {
+                list += '<tr>'
+                    + '<td>' + (index+1) + '</td>'
+                    + '<td>' + value + '</td>'
+                    + '<td>' + data.result.m[index].toFixed(2) + '</td>'
+                    + '<td>' + data.result.std[index].toFixed(2) + '</td>'
+                    + '<td>' + 0 + '</td>'
+                    + '<td>' + 0 + '</td>'
+                    + '<td>' + 0 + '</td>'
+                    + '<td>' + 0 + '</td>'
+                + '</tr>';
+            });
+            $("#result-list").html(list);
+        });
+        $("#viewSurvey").modal({show: true});
+    }
+
+    function deleteSurvey(sid) {
+        if(confirm("Are you sure?")) {
+            $.ajax({
+                url: "/manage/survey/" + sid,
+                type: "DELETE",
+                success: function(result) {
+                    if(result.ok > 0) alert("Success!");
+                    loadSurveys();
+                }
+            });
+        }
+    }
+
+    function editSurvey(sid) {
+        $("#survey-edit-id").attr("value", sid);
+        $("#editSurvey").modal({show: true});
+    }
+
+    function viewTemplate(tid) {
+        $.get("templates/" + tid, function(data) {
+            var list = '';
+            $.each(data.items, function(index, value) {
+                list += '<h6>' + (index+1) + ' ' + value.title + '</h6>'
+                    + '<ul>';
+                $.each(value.contents, function(idx, val) {
+                   list += '<li>' + val + '</li>'
+                });
+                list += '</ul>';
+            });
+            $("#cri-list").html(list);
+            $("#template-heading").html(data.name);
+        });
+        $("#viewTemplate").modal({show: true});
+    }
+
+    function addItem(e) {
+        var itm = $(e).parents(".border").clone(false);
+        $(e).parents(".border").after(itm);
+    }
+
+    function addQuest(e) {
+        var q = $(e).parents(".form-group").clone(false);
+        $(e).parents(".form-group").after(q);
+    }
+
+    function procTemplate() {
+        $("#form-template").one("submit", function(event) {
+            event.preventDefault();
+            var arr = $(".border");
+            var len = [];
+            $.each(arr, function(index, value) {
+                len.push($(value).children().length -1);
+            });
+            $("#leng").attr("value", len);
+            $(this).submit();
+        })
+    }
+
+    function delTemplate(tid) {
+        if(confirm("Are you sure?")) {
+            $.ajax({
+                url: "/manage/template/" + tid,
+                type: "DELETE",
+                success: function(result) {
+                    if(result.ok > 0) alert("Success!");
+                    loadTemplates();
+                }
+            });
+        }
     }
 
     $("document").ready(function () {
@@ -619,6 +893,7 @@
         loadSurveys();
         loadTemplates();
         activeItem("#students-item");
+        procTemplate();
         $("a.list-group-item").click(function(event) {
             event.preventDefault();
         });

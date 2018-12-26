@@ -30,7 +30,10 @@ var courseSchema = new Schema({
         default: {comments: [], ques: []}
     },
     start: Date,
-    end: Date
+    end: {
+        type: Date,
+        default: new Date()
+    }
 });
 
 courseSchema.pre("save", function(next) {
@@ -44,6 +47,38 @@ courseSchema.pre("save", function(next) {
 
 courseSchema.method("isDone", function(username) {
     return this.done.includes(username);
+});
+
+courseSchema.method("isOverDue", function() {
+    var now = new Date();
+    return (now.getTime() > this.end.getTime())? true : false;
+});
+
+courseSchema.method("processResult", function() {
+    if(this.done.length < 1) return null;
+    var res = {
+        m: [],
+        std: []
+    };
+    var arr = this.results.ques;
+    var n = arr[0].length;
+    for(let i=0; i<n; ++i) {
+        let sum =0;
+        let nn = arr.length;
+        for(let j=0; j<nn; ++j) {
+            sum += arr[j][i];
+        }
+        res.m.push(sum/nn);
+    }
+    for(let i=0; i<n; ++i) {
+        let ps =0;
+        let nn = arr.length;
+        for(let j=0; j<nn; ++j) {
+            ps += Math.pow(res.m[i] - arr[j][i], 2);
+        }
+        res.std.push(Math.sqrt(ps/(nn-1)));
+    }
+    return res;
 });
 
 var Course = mongoose.model("Course", courseSchema);
