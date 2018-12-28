@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var Survey = require("./survey");
+var User = require("./user");
 
 var Schema = mongoose.Schema;
 
@@ -42,6 +43,13 @@ courseSchema.pre("save", function(next) {
         if(err) throw err;
         course.survey = res._id;
         next();
+    });
+});
+
+courseSchema.post("save", function(doc) {
+    let course = this;
+    User.findOneAndUpdate({role: "teacher", fullname: course.teacher}, {$push: {courses: course._id}}).exec((err, res) => {
+        if(err) throw err;
     });
 });
 

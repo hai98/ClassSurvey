@@ -29,7 +29,7 @@
                 aria-haspopup="true" aria-expanded="false">
                 {{!-- <i class="fa fa-user"></i> --}}
                 <img src="/images/users.svg" class="img-fluid" width="30" height="30" alt="">
-                Admin
+                {{fname}}
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">My profile</a>
@@ -69,6 +69,14 @@
     </div>
 
     <div class="col-sm-9">
+        <div id="std-search" class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                <i class="fa fa-search"></i>
+                </span>
+            </div>
+            <input class="form-control" id="myInput" type="text" placeholder="Search by ID/Name/Class..">
+        </div>
         <div class="card mb-4" id="students-list">
             <div class="card-header d-flex">
                 All Students
@@ -739,7 +747,9 @@
         $(".list-group-item").removeClass("active");
         $(id).addClass("active");
         $(".card").hide();
+        $("#std-search").hide();
         $(id.substr(0, id.length-4) + "list").show();
+        if($("#students-item").hasClass("active")) $("#std-search").show();
     }
 
     function deleteUser(username) {
@@ -896,6 +906,12 @@
         procTemplate();
         $("a.list-group-item").click(function(event) {
             event.preventDefault();
+        });
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#students tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
         });
     });
 </script>

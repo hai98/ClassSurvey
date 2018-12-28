@@ -65,20 +65,23 @@ module.exports = function (app) {
     // });
 
     app.post("/login", passport.authenticate("local", {
-        successRedirect: "/home",
+        // successRedirect: "/home",
         failureRedirect: "/login",
         failureMessage: "Invalid username or password"
-    }));
+    }), (req, res) => {
+        if(req.user.role == "admin") res.redirect("/manage");
+        else res.redirect("/home");
+    });
 
     app.get("/home", isLoggedIn, (req, res) => {
         res.render("home", { fname: req.user.fullname });
     });
 
     // app.get("/manage", isLoggedIn, (req, res) => {
-    app.get("/manage", (req, res) => {
+    app.get("/manage", isLoggedIn, (req, res) => {
         res.locals.flash = req.session.flash;
         delete req.session.flash;
-        res.render("manage");
+        res.render("manage", {fname: req.user.fullname});
     });
 
     app.get("/students", (req, res) => {
