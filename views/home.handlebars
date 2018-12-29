@@ -73,38 +73,7 @@
         </div>
     </div>
     <div id="surveys" class="col-sm-9">
-{{!-- 
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title" onclick="loadModalContent(this)">INT3306 1 - Phát triển ứng dụng Web 
-                    <span class="badge badge-pill badge-success">
-                        <i class="fa fa-check"></i>
-                    </span>
-                </h5>
-                <h6 class="card-subtitle my-2 text-muted">Teacher: Lê Đình Thanh</h6>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title" onclick="loadModalContent(this)">INT3306 1 - Phát triển ứng dụng Web 
-                    <span class="badge badge-pill badge-success">
-                        <i class="fa fa-check"></i>
-                    </span>
-                </h5>
-                <h6 class="card-subtitle my-2 text-muted">Teacher: Lê Đình Thanh</h6>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title" onclick="loadModalContent(this)">INT3306 1 - Phát triển ứng dụng Web 
-                    <span class="badge badge-pill badge-warning">
-                        <i class="fa fa-pencil"></i>
-                    </span>
-                </h5>
-                <h6 class="card-subtitle my-2 text-muted">Teacher: Lê Đình Thanh</h6>
-            </div>
-        </div>
-         --}}
+
         <div class="modal fade" id="test-modal">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -150,9 +119,13 @@
             var done = 0;
             $.each(data, function(index, value) {
                 items.push('<div class="card mb-3"><div class="card-body"> <h5 class="card-title"');
+                {{#if std}}
                 if(!value.status[0] && !value.status[1])
                     items.push(' onclick="loadModalContent(this)"'); 
-                items.push('sid="' + value.surveyid + '"' + 'cid="' + value.id + '"' + '>');
+                    items.push(`sid="${value.surveyid}" cid="${value.id}">`);
+                {{else}}
+                    items.push('>');
+                {{/if}}
                 items.push(value.code + ' - ' + value.name);
                 if(value.status[0]) {
                     items.push(' <span class="badge badge-pill badge-success"><i class="fa fa-check"></i></span>');
@@ -160,8 +133,14 @@
                 }
                 else items.push(' <span class="badge badge-pill badge-warning"><i class="fa fa-pencil"></i></span>');
                 items.push('</h5>');
-                items.push('<h6 class="card-subtitle my-2 text-muted">Teacher: ' + value.teacher + '</h6>');
-                items.push('<h6 class="card-subtitle my-2 text-muted font-weight-light">Due date: ' + (new Date(value.end).toLocaleString("vi-VN")) + '</h6>');
+                {{#if std}}    
+                items.push(`<h6 class="card-subtitle my-2 text-muted">Teacher: ${value.teacher} </h6>`);
+                {{/if}}
+                    items.push(`<h6 class="card-subtitle my-2 text-muted font-weight-light">Due date: ${new Date(value.end).toLocaleString("vi-VN")} </h6>`);
+                {{#if tea}}
+                    items.push('<button class="btn btn-sm btn-info mr-3">Students List</button>');
+                    items.push('<button class="btn btn-sm btn-info">Result</button>');
+                {{/if}}
                 items.push('</div></div>');
             });
             //$("#surveys").empty();
@@ -182,26 +161,27 @@
             $.each(data, function(index, value) {
                 index+=1;
                 items.push('<div class="form-group">');
-                items.push('<div class="border-bottom">\
-                                <strong>' + index + '. ' + value.title + '</strong>\
-                                <div class="d-flex justify-content-end">\
-                                    <strong class="mx-4">1</strong>\
-                                    <strong class="mx-4">2</strong>\
-                                    <strong class="mx-4">3</strong>\
-                                    <strong class="mx-4">4</strong>\
-                                    <strong class="mx-4">5</strong>\
-                                </div>\
-                            </div>');
+                items.push(`<div class="border-bottom">
+                                <strong> ${index}. ${value.title}</strong>
+                                <div class="d-flex justify-content-end mr-5">
+                                    <strong class="mx-4">1</strong>
+                                    <strong class="mx-4">2</strong>
+                                    <strong class="mx-4">3</strong>
+                                    <strong class="mx-4">4</strong>
+                                    <strong class="mx-4">5</strong>
+                                </div>
+                            </div>`);
                 items.push('<ul class="list-group list-group-flush">');
                 $.each(value.contents, function(idx, val) {
-                    items.push('<li class="list-group-item d-flex justify-content-between">' + val + '<div class="form-check-inline">\
-                                        <input type="radio" value="1" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="2" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="3" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="4" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
-                                        <input type="radio" value="5" required="true" class="form-check-input mx-4" name="optradio' + x + '">\
-                                    </div>\
-                                </li>');
+                    items.push(`<li class="list-group-item d-flex justify-content-between">${val}
+                                <div class="form-check-inline">
+                                        <input type="radio" value="1" required="true" class="form-check-input mx-4" name="optradio${x}">
+                                        <input type="radio" value="2" required="true" class="form-check-input mx-4" name="optradio${x}">
+                                        <input type="radio" value="3" required="true" class="form-check-input mx-4" name="optradio${x}">
+                                        <input type="radio" value="4" required="true" class="form-check-input mx-4" name="optradio${x}">
+                                        <input type="radio" value="5" required="true" class="form-check-input mx-4" name="optradio${x}">
+                                    </div>
+                                </li>`);
                     ++x;
                 });
                 items.push('</ul');

@@ -660,13 +660,13 @@
             var items = [];
             $.each(data, function (index, student) {
                 items.push("<tr>");
-                items.push("<td>" + student.username + "</td>");
-                items.push("<td>" + student.fullname + "</td>");
-                items.push("<td>" + student.class + "</td>");
-                items.push('<td><button type="button" class="btn btn-primary btn-sm" onclick="editStd(this)">\
-                    <i class="fa fa-edit"></i></button> \
-                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteUser(\'' + student.username +'\')">\
-                        <i class="fa fa-trash"></i></button></td>');
+                items.push(`<td>${student.username}</td>`);
+                items.push(`<td>${student.fullname}</td>`);
+                items.push(`<td>${student.class}</td>`);
+                items.push(`<td><button type="button" class="btn btn-primary btn-sm" onclick="editStd(this)">
+                    <i class="fa fa-edit"></i></button> 
+                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteUser('${student.username}')">
+                        <i class="fa fa-trash"></i></button></td>`);
                 items.push("</tr>");
             });
             $("#students").empty();
@@ -680,13 +680,13 @@
             var items = [];
             $.each(data, function(index, teacher) {
                 items.push("<tr>");
-                items.push("<td>" + teacher.username + "</td>");
-                items.push("<td>" + teacher.fullname + "</td>");
-                items.push("<td>" + teacher.email + "</td>");
-                items.push('<td><button type="button" class="btn btn-primary btn-sm" onclick="editTea(this)">\
-                    <i class="fa fa-edit"></i></button> \
-                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteUser(\''+ teacher.username +'\')">\
-                    <i class="fa fa-trash"></i></button></td>');
+                items.push(`<td>${teacher.username}</td>`);
+                items.push(`<td>${teacher.fullname}</td>`);
+                items.push(`<td>${teacher.email}</td>`);
+                items.push(`<td><button type="button" class="btn btn-primary btn-sm" onclick="editTea(this)">
+                    <i class="fa fa-edit"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteUser('${teacher.username}')">
+                    <i class="fa fa-trash"></i></button></td>`);
                 items.push("</tr>");
             });
             $("#teachers").empty();
@@ -700,17 +700,17 @@
             var items = [];
             $.each(data, function(index, survey) {
                 items.push("<tr>");
-                items.push("<td>" + survey.code + "</td>");
-                items.push("<td>" + survey.name + "</td>");
-                items.push("<td>" + survey.teacher + "</td>");
-                items.push("<td>" + (new Date(survey.end).toLocaleString("vi-VN")) + "</td>");
+                items.push(`<td>${survey.code}</td>`);
+                items.push(`<td>${survey.name}</td>`);
+                items.push(`<td>${survey.teacher}</td>`);
+                items.push(`<td>${new Date(survey.end).toLocaleString("vi-VN")}</td>`);
                 items.push('<td>');
-                items.push('<button type="button" class="btn btn-primary btn-sm" onclick="viewSurvey(\'' + survey._id +'\')"\
-                ><i class="fa fa-eye"></i></button> ');
-                items.push('<button type="button" class="btn btn-primary btn-sm" onclick="editSurvey(\'' + survey._id +'\')">\
-                    <i class="fa fa-edit"></i></button> ');
-                items.push('<button type="button" class="btn btn-danger btn-sm" onclick="deleteSurvey(\'' + survey._id +'\')">\
-                    <i class="fa fa-trash"></i></button>');
+                items.push(`<button type="button" class="btn btn-primary btn-sm" onclick="viewSurvey('${survey._id}')"
+                ><i class="fa fa-eye"></i></button> `);
+                items.push(`<button type="button" class="btn btn-primary btn-sm" onclick="editSurvey('${survey._id}')">
+                    <i class="fa fa-edit"></i></button> `);
+                items.push(`<button type="button" class="btn btn-danger btn-sm" onclick="deleteSurvey('${survey._id}')">
+                    <i class="fa fa-trash"></i></button>`);
                 items.push('</td>');
                 items.push("</tr>");
             });
@@ -725,15 +725,15 @@
             var items = [];
             $.each(data, function(index, template) {
                 items.push("<tr>");
-                items.push("<td>" + template.name);
+                items.push(`<td>${template.name}`);
                 if(template.isDefault) items.push(' <span class="badge badge-success badge-pill">Default</span>');
                 items.push("</td>");
                 items.push('<td>');
-                items.push('<button type="button" class="btn btn-primary btn-sm" onclick="viewTemplate(\'' + template._id +'\')">\
-                    <i class="fa fa-eye"></i></button> ');
+                items.push(`<button type="button" class="btn btn-primary btn-sm" onclick="viewTemplate('${template._id}')">
+                    <i class="fa fa-eye"></i></button> `);
                 items.push('<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button> ');
-                items.push('<button type="button" class="btn btn-danger btn-sm" onclick="delTemplate(\'' + template._id +'\')">\
-                    <i class="fa fa-trash"></i></button>');
+                items.push(`<button type="button" class="btn btn-danger btn-sm" onclick="delTemplate('${template._id}')">
+                    <i class="fa fa-trash"></i></button>`);
                 items.push('</td>');
                 items.push("</tr>");
             });
@@ -782,7 +782,7 @@
     }
 
     function viewSurvey(id) {
-        $.get("survey/" + id + "/result", function(data) {
+        $.get(`survey/${id}/result`, function(data) {
             $("#modal-heading").html(data.heading);
             $("#dt").html(data.done.length + '/' + data.stdList.length);
             percent = Math.round(100*data.done.length/data.stdList.length);
@@ -793,9 +793,9 @@
                     items.push('<tr class="table-primary">');
                 else
                     items.push("<tr>");
-                items.push("<td>" + value.username + "</td>");
-                items.push("<td>" + value.fullname + "</td>");
-                items.push("<td>" + value.class + "</td>");
+                items.push(`<td>${value.username}</td>`);
+                items.push(`<td>${value.fullname}</td>`);
+                items.push(`<td>${value.class}</td>`);
                 items.push("</td>");
             });
             $("#std-done").html(items.join(""));
@@ -810,16 +810,16 @@
                 data.result.std =  data.result.m;
             }
             $.each(cri, function(index, value) {
-                list += '<tr>'
-                    + '<td>' + (index+1) + '</td>'
-                    + '<td>' + value + '</td>'
-                    + '<td>' + data.result.m[index].toFixed(2) + '</td>'
-                    + '<td>' + data.result.std[index].toFixed(2) + '</td>'
-                    + '<td>' + 0 + '</td>'
-                    + '<td>' + 0 + '</td>'
-                    + '<td>' + 0 + '</td>'
-                    + '<td>' + 0 + '</td>'
-                + '</tr>';
+                list += `<tr>
+                    <td>${(index+1)}</td>
+                    <td>${value}</td>
+                    <td>${data.result.m[index].toFixed(2)}</td>
+                    <td>${data.result.std[index].toFixed(2)}</td>
+                    <td>${0}</td>
+                    <td>${0}</td>
+                    <td>${0}</td>
+                    <td>${0}</td>
+                </tr>`;
             });
             $("#result-list").html(list);
         });
@@ -848,10 +848,9 @@
         $.get("templates/" + tid, function(data) {
             var list = '';
             $.each(data.items, function(index, value) {
-                list += '<h6>' + (index+1) + ' ' + value.title + '</h6>'
-                    + '<ul>';
+                list += `<h6>${(index+1)} ${value.title}</h6><ul>`;
                 $.each(value.contents, function(idx, val) {
-                   list += '<li>' + val + '</li>'
+                   list += `<li>${val}</li>`;
                 });
                 list += '</ul>';
             });

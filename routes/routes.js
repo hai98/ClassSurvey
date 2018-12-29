@@ -74,7 +74,12 @@ module.exports = function (app) {
     });
 
     app.get("/home", isLoggedIn, (req, res) => {
-        res.render("home", { fname: req.user.fullname });
+        var opt = {
+            fname: req.user.fullname,
+            std: (req.user.role == "student"),
+            tea: (req.user.role == "teacher")
+        };
+        res.render("home", opt);
     });
 
     // app.get("/manage", isLoggedIn, (req, res) => {
