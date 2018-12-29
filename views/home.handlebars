@@ -3,10 +3,6 @@
     .navbar {
         padding: 0px 100px 0px 100px;
     }
-
-    .modal-lg {
-        max-width: 85%;
-    }
 </style>
 {{/section}}
 {{#section 'body'}}
@@ -18,7 +14,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            {{!-- <li class="nav-item active">
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
@@ -26,12 +22,12 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
+            </li> --}}
         </ul>
-        <form class="form-inline my-2 my-sm-0">
+        {{!-- <form class="form-inline my-2 my-sm-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-success my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>
-        </form>
+        </form> --}}
         <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
@@ -75,7 +71,7 @@
     <div id="surveys" class="col-sm-9">
 
         <div class="modal fade" id="test-modal">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg" style="max-width: 85%">
                 <div class="modal-content">
 
                     <!-- Modal Header -->
@@ -110,6 +106,60 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="list-modal">
+    <div class="modal-dialog modal-lg" style="max-width: 70%">
+        <div class="modal-content">
+                    <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-head">Modal Heading</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+                    <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row" id="std-table">
+                    <div class="col-sm-12">
+                        <table class="table table-sm table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                </tr>
+                            </thead>
+                            <tbody id="std-done">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" id="result-table">
+                    <div class="col-sm-12">
+                        <table class="table table-sm table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Criteria</th>
+                                    <th>M</th>
+                                    <th>STD</th>
+                                    <th>M1</th>
+                                    <th>STD1</th>
+                                    <th>M2</th>
+                                    <th>STD2</th>
+                                </tr>
+                            </thead>
+                            <tbody id="result-list">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{#section 'script'}}
 <script>
 
@@ -118,7 +168,7 @@
             var items = [];
             var done = 0;
             $.each(data, function(index, value) {
-                items.push('<div class="card mb-3"><div class="card-body"> <h5 class="card-title"');
+                items.push('<div class="card mb-3"><div class="card-body"> <h5 class="card-title" style="cursor: pointer;"');
                 {{#if std}}
                 if(!value.status[0] && !value.status[1])
                     items.push(' onclick="loadModalContent(this)"'); 
@@ -138,8 +188,8 @@
                 {{/if}}
                     items.push(`<h6 class="card-subtitle my-2 text-muted font-weight-light">Due date: ${new Date(value.end).toLocaleString("vi-VN")} </h6>`);
                 {{#if tea}}
-                    items.push('<button class="btn btn-sm btn-info mr-3">Students List</button>');
-                    items.push('<button class="btn btn-sm btn-info">Result</button>');
+                    items.push(`<button class="btn btn-sm btn-outline-info mr-3" onclick="viewStdList('${value.id}')">Students List</button>`);
+                    items.push(`<button class="btn btn-sm btn-outline-info" onclick="viewResult('${value.id}')">Result</button>`);
                 {{/if}}
                 items.push('</div></div>');
             });
@@ -163,11 +213,11 @@
                 items.push('<div class="form-group">');
                 items.push(`<div class="border-bottom">
                                 <strong> ${index}. ${value.title}</strong>
-                                <div class="d-flex justify-content-end mr-5">
-                                    <strong class="mx-4">1</strong>
-                                    <strong class="mx-4">2</strong>
-                                    <strong class="mx-4">3</strong>
-                                    <strong class="mx-4">4</strong>
+                                <div class="d-flex justify-content-end" style ="padding-right: 35px;">
+                                    <strong class="mx-4" style="padding-right:4px;">1</strong>
+                                    <strong class="mx-4" style="padding-right:4px;">2</strong>
+                                    <strong class="mx-4" style="padding-right:3px;">3</strong>
+                                    <strong class="mx-4" style="padding-right:4px;">4</strong>
                                     <strong class="mx-4">5</strong>
                                 </div>
                             </div>`);
@@ -184,8 +234,7 @@
                                 </li>`);
                     ++x;
                 });
-                items.push('</ul');
-                items.push('</div');
+                items.push('</ul></div>');
             });
             $("#ques").html(items.join(""));
             $("#test-modal").modal({show: true});
@@ -201,6 +250,59 @@
             if($(e).attr("id")=="done") $('h5 .badge-success').parent().parent().parent().show();
             else $('h5 .badge-warning').parent().parent().parent().show();
         }
+    }
+
+    function viewStdList(id) {
+        $.get(`survey/${id}/result`, function(data) {
+            var items = [];
+            $.each(data.stdList, function(index, value) {
+                if(data.done.indexOf(value.username) > -1)
+                    items.push('<tr class="table-primary">');
+                else
+                    items.push("<tr>");
+                items.push(`<td>${value.username}</td>`);
+                items.push(`<td>${value.fullname}</td>`);
+                items.push(`<td>${value.class}</td>`);
+                items.push("</td>");
+            });
+            $("#std-done").html(items.join(""));
+        });
+        $("#std-table").show();
+        $("#result-table").hide();
+        $("#modal-head").html("Students List");
+        $("#list-modal").modal({show: true});
+    }
+
+    function viewResult(id) {
+        $.get(`survey/${id}/result`, function(data) {
+            var cri = [];
+            data.survey.forEach(function(value) {
+                cri = cri.concat(value.contents);
+            });
+            var list = '';
+            if(!data.result) {
+                data.result = {};
+                data.result.m =  Array(cri.length).fill(0);
+                data.result.std =  data.result.m;
+            }
+            $.each(cri, function(index, value) {
+                list += `<tr>
+                    <td>${(index+1)}</td>
+                    <td>${value}</td>
+                    <td>${data.result.m[index].toFixed(2)}</td>
+                    <td>${data.result.std[index].toFixed(2)}</td>
+                    <td>${0}</td>
+                    <td>${0}</td>
+                    <td>${0}</td>
+                    <td>${0}</td>
+                </tr>`;
+            });
+            $("#result-list").html(list);
+        });
+        $("#modal-head").html("Result");
+        $("#std-table").hide();
+        $("#result-table").show();
+        $("#list-modal").modal({show: true});
     }
 
     $("document").ready(function() {
