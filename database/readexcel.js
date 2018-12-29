@@ -11,8 +11,12 @@ module.exports = {
         data.forEach((value, index, arr) => {
             value.role = "student";
         });
-        User.create(data, (err, arr) => { if (err) throw err; });
-        return data;
+        User.create(data, (err, arr) => {
+            if (err){
+                console.error(err);
+                return null;
+            } else return data;
+        });
     },
     
     parseTeacher: function(filePath) {

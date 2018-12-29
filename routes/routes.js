@@ -191,12 +191,14 @@ module.exports = function (app) {
             if(err) throw err;
             User.find({role: "student", courses: course._id}, "username fullname class", (err, users) => {
                 if(err) throw err;
-                res.json({
-                    heading: course.code + " - " + course.name,
-                    done: course.done,
-                    result: course.processResult(),
-                    survey: course.survey.items,
-                    stdList: users,
+                course.processResult(function(data) {
+                    res.json({
+                        heading: course.code + " - " + course.name,
+                        done: course.done,
+                        result: data,
+                        survey: course.survey.items,
+                        stdList: users,
+                    });
                 });
             });
         });
@@ -387,8 +389,19 @@ module.exports = function (app) {
             fs.renameSync(oldPath, newPath);
             var data = readExcel.parseStudents(newPath);
             //TODO: response to ajax request??
-            res.json(data);
-            // res.redirect(303, "/manage");
+            // res.json(data);
+            if(!data) {
+                req.session.flash = {
+                    type: "danger",
+                    intro: "Opps!",
+                    message: "Something went wrong"
+                };
+            } else req.session.flash = {
+                type: "success",
+                intro: "Success!",
+                message: "added" + data.length + "students"
+            };
+            res.redirect(303, "/manage");
         });
     });
 

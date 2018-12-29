@@ -37,7 +37,6 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">My profile</a>
-                <a class="dropdown-item" href="#">Another action</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="logout">Logout</a>
             </div>
@@ -291,10 +290,10 @@
                     <td>${value}</td>
                     <td>${data.result.m[index].toFixed(2)}</td>
                     <td>${data.result.std[index].toFixed(2)}</td>
-                    <td>${0}</td>
-                    <td>${0}</td>
-                    <td>${0}</td>
-                    <td>${0}</td>
+                    <td>${data.result.m1[index].toFixed(2)}</td>
+                    <td>${data.result.std1[index].toFixed(2)}</td>
+                    <td>${data.result.m2[index].toFixed(2)}</td>
+                    <td>${data.result.std2[index].toFixed(2)}</td>
                 </tr>`;
             });
             $("#result-list").html(list);
