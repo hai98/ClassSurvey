@@ -12,7 +12,7 @@ var async = require("async");
 //api sử dụng object id
 
 //Init database
-/*
+
 Survey.create({name: "Survey 1", items: [
     {
         title: "Cơ sở vật chất",
@@ -57,7 +57,7 @@ User.create({username: "admin", password: "admin", fullname: "Admin", role: "adm
     if(err) throw err;
     console.log(ad);
 });
-*/
+
 
 // User.findOne({username: 16020936}).populate({path: "courses", populate: {path: "surveys"}}).exec(function(err, user) {
 //     console.log(user.courses[0].surveys[0]);
@@ -107,10 +107,10 @@ User.create({username: "admin", password: "admin", fullname: "Admin", role: "adm
 // Course.findOne({}).exec((err, res) => {
 //     console.log(res.end.toLocaleString("vi-VN"));
 // });
-var str = "INT3306 1";
-var regex = new RegExp("^"+ str.substr(0, 7), "i");
-console.log(regex);
-Course.find({code: {$regex: regex}}).exec((err, res) => {
-    if(err) throw err;
-    console.log(res);
-});
+// var str = "INT3306 1";
+// var regex = new RegExp("^"+ str.substr(0, 7), "i");
+// console.log(regex);
+// Course.find({code: {$regex: regex}}).exec((err, res) => {
+//     if(err) throw err;
+//     console.log(res);
+// });
