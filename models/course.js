@@ -64,7 +64,7 @@ courseSchema.method("isOverDue", function() {
 });
 
 courseSchema.method("processResult", function(cbk) {
-    if(this.done.length < 1) return null;
+    if(this.done.length < 1) return cbk(null);
     // return calc(this.results.ques);
     var course = this;
     var res = calc(course.results.ques);

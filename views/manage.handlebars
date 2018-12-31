@@ -14,7 +14,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            {{!-- <li class="nav-item active">
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
@@ -22,7 +22,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
+            </li> --}}
         </ul>
         <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -33,7 +33,6 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">My profile</a>
-                <a class="dropdown-item" href="#">Another action</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="logout">Logout</a>
             </div>
@@ -546,9 +545,9 @@
 
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="row">
+                        <div class="row mb-4">
                             <div class="col-sm-3">
-                                Done/Total: <strong id="dt">34/25</strong>
+                                Done/Total: <strong id="dt"></strong>
                             </div>
                             <div class="col-sm-9">
                                 <div class="progress">
@@ -558,8 +557,8 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <button class="btn btn-sm btn-primary" aria-expanded="false" type="button" data-toggle="collapse" data-target="#std-list">Show Students List</button>
-                                <button class="btn btn-sm btn-primary" aria-expanded="false" type="button" data-toggle="collapse" data-target="#result">Show Result</button>
+                                <button class="btn btn-sm btn-primary" aria-expanded="false" type="button" data-toggle="collapse" data-target="#std-list">Show Students List <i class="fa fa-chevron-down"></i></button>
+                                <button class="btn btn-sm btn-primary" aria-expanded="false" type="button" data-toggle="collapse" data-target="#result">Show Result <i class="fa fa-chevron-down"></i></button>
                             </div>
                         </div>
                         <div class="row collapse" id="std-list">
@@ -568,6 +567,7 @@
                                 <table class="table table-sm table-bordered table-striped table-hover">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>ID</th>
                                             <th>Name</th>
                                             <th>Class</th>
@@ -793,6 +793,7 @@
                     items.push('<tr class="table-primary">');
                 else
                     items.push("<tr>");
+                items.push(`<td>${index+1}</td>`);
                 items.push(`<td>${value.username}</td>`);
                 items.push(`<td>${value.fullname}</td>`);
                 items.push(`<td>${value.class}</td>`);

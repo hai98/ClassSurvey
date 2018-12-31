@@ -67,7 +67,9 @@
             </a>
         </div>
     </div>
+    
     <div id="surveys" class="col-sm-9">
+    {{#if std}}
 
         <div class="modal fade" id="test-modal">
             <div class="modal-dialog modal-lg" style="max-width: 85%">
@@ -103,10 +105,12 @@
                 </div>
             </div>
         </div>
+        {{/if}}
     </div>
 </div>
 
-
+{{#if tea}}
+    
 <div class="modal fade" id="list-modal">
     <div class="modal-dialog modal-lg" style="max-width: 70%">
         <div class="modal-content">
@@ -119,9 +123,11 @@
             <div class="modal-body">
                 <div class="row" id="std-table">
                     <div class="col-sm-12">
+                        <h6></h6>
                         <table class="table table-sm table-bordered table-striped table-hover">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Class</th>
@@ -158,6 +164,7 @@
         </div>
     </div>
 </div>
+{{/if}}
 
 {{#section 'script'}}
 <script>
@@ -200,6 +207,8 @@
         });
     }
 
+{{#if std}}
+    
     function loadModalContent(e){
         var id = e.getAttribute("sid");
         $(".modal-title").html(e.textContent);
@@ -239,6 +248,7 @@
             $("#test-modal").modal({show: true});
         });
     }
+{{/if}}
 
     function activeItem(e) {
         $(".list-group-item").removeClass("active");
@@ -251,6 +261,8 @@
         }
     }
 
+{{#if tea}}
+
     function viewStdList(id) {
         $.get(`survey/${id}/result`, function(data) {
             var items = [];
@@ -259,6 +271,7 @@
                     items.push('<tr class="table-primary">');
                 else
                     items.push("<tr>");
+                items.push(`<td>${index+1}</td>`);
                 items.push(`<td>${value.username}</td>`);
                 items.push(`<td>${value.fullname}</td>`);
                 items.push(`<td>${value.class}</td>`);
@@ -283,6 +296,10 @@
                 data.result = {};
                 data.result.m =  Array(cri.length).fill(0);
                 data.result.std =  data.result.m;
+                data.result.m1 =  data.result.m;
+                data.result.std1 =  data.result.m;
+                data.result.m2 =  data.result.m;
+                data.result.std2 =  data.result.m;
             }
             $.each(cri, function(index, value) {
                 list += `<tr>
@@ -303,6 +320,7 @@
         $("#result-table").show();
         $("#list-modal").modal({show: true});
     }
+{{/if}}
 
     $("document").ready(function() {
         loadSurveys();

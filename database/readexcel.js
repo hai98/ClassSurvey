@@ -4,7 +4,7 @@ var Course = require("../models/course");
 var Survey = require("../models/survey");
 
 module.exports = {
-    parseStudents: function(filePath) {
+    parseStudents: function(filePath, cb) {
         var wb = xlsx.readFile(filePath);
         var data = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: [null, "username", "password", "fullname", "email", "class"] });
         data.shift();
@@ -14,23 +14,27 @@ module.exports = {
         User.create(data, (err, arr) => {
             if (err){
                 console.error(err);
-                return null;
-            } else return data;
+                return cb(err, null);
+            } else return cb(null, data);
         });
     },
     
-    parseTeacher: function(filePath) {
+    parseTeacher: function(filePath, cb) {
         var wb = xlsx.readFile(filePath);
         var data = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: [null, "username", "password", "fullname", "email", "class"] });
         data.shift();
         data.forEach((value, index, arr) => {
             value.role = "teacher";
         });
-        User.create(data, (err, arr) => { if (err) throw err; });
-        return data;
+        User.create(data, (err, arr) => {
+            if (err){
+                console.error(err);
+                return cb(err, null);
+            } else return cb(null, data);
+        });
     },
 
-    parseCourse: function(filePath) {
+    parseCourse: function(filePath, cb) {
         var wb = xlsx.readFile(filePath);
         var wsh = wb.Sheets[wb.SheetNames[0]];
         var data = {};
@@ -48,12 +52,14 @@ module.exports = {
         Course.create(data, function(err, course) {
             if(err) throw err;
             User.updateMany({username: {$in: ids}}, {$push: {courses: course._id}}).exec((err, res) => {
-                if (err) throw err;
+                if (err) {
+                    return cb(err, null);
+                }
                 console.log(res);
+                data.ids = ids;
+                return cb(null, data);
             });
         });
-        data.ids = ids;
-        return data;
     }
 
 };

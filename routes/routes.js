@@ -387,21 +387,22 @@ module.exports = function (app) {
             var oldPath = files.excelFile.path;
             var newPath = form.uploadDir + files.excelFile.name;
             fs.renameSync(oldPath, newPath);
-            var data = readExcel.parseStudents(newPath);
+            readExcel.parseStudents(newPath, function(err, data) {
+                if(data == null) {
+                    req.session.flash = {
+                        type: "danger",
+                        intro: "Opps!",
+                        message: "Something went wrong"
+                    };
+                } else req.session.flash = {
+                    type: "success",
+                    intro: "Success!",
+                    message: "added" + data.length + "students"
+                };
+                res.redirect(303, "/manage");
+            });
             //TODO: response to ajax request??
             // res.json(data);
-            if(!data) {
-                req.session.flash = {
-                    type: "danger",
-                    intro: "Opps!",
-                    message: "Something went wrong"
-                };
-            } else req.session.flash = {
-                type: "success",
-                intro: "Success!",
-                message: "added" + data.length + "students"
-            };
-            res.redirect(303, "/manage");
         });
     });
 
@@ -416,9 +417,22 @@ module.exports = function (app) {
             var oldPath = files.excelFile.path;
             var newPath = form.uploadDir + files.excelFile.name;
             fs.renameSync(oldPath, newPath);
-            var data = readExcel.parseTeacher(newPath);
+            readExcel.parseTeacher(newPath, function(err, data) {
+                if(data == null) {
+                    req.session.flash = {
+                        type: "danger",
+                        intro: "Opps!",
+                        message: "Something went wrong"
+                    };
+                } else req.session.flash = {
+                    type: "success",
+                    intro: "Success!",
+                    message: "added" + data.length + "teachers"
+                };
+                res.redirect(303, "/manage");
+            });
             //TODO: response to ajax request??
-            res.json(data);
+            // res.json(data);
             // res.redirect(303, "/manage");
         });
     });
@@ -434,9 +448,22 @@ module.exports = function (app) {
             var oldPath = files.excelFile.path;
             var newPath = form.uploadDir + files.excelFile.name;
             fs.renameSync(oldPath, newPath);
-            var data = readExcel.parseCourse(newPath);
+            readExcel.parseCourse(newPath, function(err, data) {
+                if(data == null) {
+                    req.session.flash = {
+                        type: "danger",
+                        intro: "Opps!",
+                        message: "Something went wrong"
+                    };
+                } else req.session.flash = {
+                    type: "success",
+                    intro: "Success!",
+                    message: "added ok"
+                };
+                res.redirect(303, "/manage");
+            });
             //TODO: response to ajax request??
-            res.json(data);
+            // res.json(data);
             // res.redirect(303, "/manage");
         });
     });
