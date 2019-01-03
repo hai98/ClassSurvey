@@ -5,12 +5,6 @@ var mongodb = require("./database/mongoose");
 var Survey = require("./models/survey");
 var async = require("async");
 
-//TODO: làm view cho gv, hoàn chỉnh thêm xoá sửa cho admin
-// tạo acc admin, làm thống kê kết quả
-// tổ chức lại code
-// dùng BS4 filter để search
-//api sử dụng object id
-
 //Init database
 
 Survey.create({name: "Survey 1", items: [
