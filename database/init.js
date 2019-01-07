@@ -1,8 +1,8 @@
-var User = require("./models/user");
-var Course = require("./models/course");
+var User = require("../models/user");
+var Course = require("../models/course");
 var xlsx = require("xlsx");
-var mongodb = require("./database/mongoose");
-var Survey = require("./models/survey");
+var mongodb = require("./mongoose");
+var Survey = require("../models/survey");
 var async = require("async");
 
 //Init database
